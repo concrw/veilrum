@@ -1,0 +1,4 @@
+project_id = "ggzwvjyioqkljbnzupaj"
+
+[functions.analyze-perspective]
+verify_jwt = false
