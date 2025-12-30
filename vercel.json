@@ -1,5 +1,4 @@
 {
-  "name": "priper",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
