@@ -120,17 +120,25 @@ function AmberSheet({
   const [val, setVal] = useState('');
   const chatRef = useRef<HTMLDivElement>(null);
 
+  const SHEET_REPLIES: [string, string][] = [
+    ['그 감정, 언제부터 있었던 것 같아요?', '같이 파고들어요'],
+    ['그게 지금 몸 어디에서 느껴져요?', '가까이 있어요'],
+    ['그 감정 아래에 또 다른 게 있을 것 같아요?', '부드럽게 물어봐요'],
+    ['오늘 말해줘서 고마워요. 혼자 안고 있지 않아도 돼요.', '여기 있어요'],
+    ['그 상황에서 뭐가 제일 힘들었어요?', '같이 있어요'],
+    ['그때 가장 필요했던 게 뭐였을까요?', '궁금해요'],
+    ['그 감정에 이름을 붙인다면 뭐라고 할 것 같아요?', '천천히 볼게요'],
+    ['비슷한 감정이 자주 올라와요?', '패턴을 봐요'],
+  ];
+
   const send = () => {
     if (!val.trim()) return;
     const txt = val.trim();
     setMsgs(m => [...m, { role: 'user', text: txt }]);
     setVal('');
+    const pick = SHEET_REPLIES[Math.floor(Math.random() * SHEET_REPLIES.length)];
     setTimeout(() => {
-      setMsgs(m => [...m, {
-        role: 'ai',
-        text: '그 감정, 언제부터 있었던 것 같아요?',
-        tone: '같이 파고들어요',
-      }]);
+      setMsgs(m => [...m, { role: 'ai', text: pick[0], tone: pick[1] }]);
     }, 700);
   };
 

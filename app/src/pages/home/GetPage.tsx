@@ -23,11 +23,32 @@ const GET_GROUPS = [
   { name: '일반적 나와 비밀스러운 나가 다른 사람들', desc: '평소엔 괜찮은데 아무도 모르는 다른 면이 있는 패턴', count: 143, matched: false, tags: ['모순', '일반', '비밀'], entries: ['보통 때는 괜찮은데 아무도 모르는 두려움이 있어요.'] },
 ];
 
+// Amber — 공감형 (Get탭: 결산 맥락, 자기 이해 지원)
 const AMBER_REPLIES = [
-  '어떤 부분이 다르게 느껴지는지 말해줘요.',
-  '그 부분을 좀 더 얘기해볼 수 있어요?',
-  '어떻게 바꾸고 싶어요?',
-  '그 느낌이 더 정확한 것 같아요?',
+  '그 부분이 다르게 느껴진 건 중요한 신호예요. 어떤 점이 다른가요?',
+  '결과를 보면서 어떤 감정이 올라왔어요?',
+  '이 가면이 언제 가장 강하게 나타나요?',
+  '그게 당신 잘못이 아니에요. 살아남는 방법이었던 거예요.',
+  '어떤 부분이 "맞다"는 느낌이 들었어요?',
+  '이 패턴이 당신을 어떻게 보호해왔는지 생각해봤어요?',
+  '그 상처가 언제부터 있었던 것 같아요?',
+  '지금 가장 마음에 걸리는 게 뭐예요?',
+  '진짜 나를 보는 게 어떤 기분이에요?',
+  '이 결과 중에 새롭게 알게 된 게 있어요?',
+  '그 두려움, 언제부터 가지고 있었어요?',
+  '조금씩 바꾸고 싶은 부분이 있어요?',
+];
+
+// Frost — 분석형 (Get탭: 패턴 데이터 해석)
+const FROST_REPLIES = [
+  '4축 중 가장 극단적인 점수가 나온 축이 핵심이에요. 어떤 상황에서 그게 작동하는지 봐요.',
+  '이 점수 패턴은 세 가지 행동 반복을 만들어요. 그 반복을 인식하는 것만으로도 변화가 시작돼요.',
+  '가면은 원래 보호 기제예요. 지금 그 가면이 과잉 작동하고 있는지 확인해봐요.',
+  '애착 점수가 높을수록 관계에서 에너지 소모가 커요. 그걸 인식했다는 것 자체가 데이터예요.',
+  '패턴은 반복될수록 강화돼요. 지금 인식하는 게 가장 중요한 단계예요.',
+  '이 결과에서 일관된 것이 뭔지 보이죠? 그게 핵심 패턴이에요.',
+  '감정이 아니라 구조를 봐요. 왜 이런 반응이 나오는지 이유가 보여요.',
+  '변화는 인식에서 시작해요. 지금 여기서 이미 시작됐어요.',
 ];
 
 type Section = 'summary' | 'community';
@@ -128,7 +149,8 @@ export default function GetPage() {
     if (!v) return;
     setChatMsgs(prev => [...prev, { role: 'user', text: v }]);
     setChatInput('');
-    const r = AMBER_REPLIES[Math.floor(Math.random() * AMBER_REPLIES.length)];
+    const pool = sheetMode === 'frost' ? FROST_REPLIES : AMBER_REPLIES;
+    const r = pool[Math.floor(Math.random() * pool.length)];
     setTimeout(() => {
       setChatMsgs(prev => [...prev, { role: 'ai', text: r }]);
     }, 700);
@@ -138,7 +160,7 @@ export default function GetPage() {
         { user_id: user.id, tab: 'get', role: 'ai',   content: r },
       ]);
     }
-  }, [chatInput, user, setChatMsgs]);
+  }, [chatInput, user, setChatMsgs, sheetMode]);
 
   const axes = priperAxes ?? [
     { label: '애착', val: 72 },
@@ -392,7 +414,13 @@ export default function GetPage() {
             <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '8px', scrollbarWidth: 'none' }}>
               <div style={{ background: sheetMode === 'amber' ? '#D4A5740A' : '#7BA8C408', border: `1px solid ${sheetMode === 'amber' ? '#D4A57422' : '#7BA8C422'}`, borderRadius: '11px 11px 11px 3px', padding: '10px 13px' }}>
                 <div style={{ fontSize: '14px', fontWeight: 300, color: '#E7E5E4', fontFamily: "'Cormorant Garamond', serif", lineHeight: 1.55 }}>
-                  {sheetMode === 'amber' ? '지금까지 나눈 것들을 정리해봤어요. 같이 확인해봐요.' : '패턴을 분석했어요. 어떤 부분이 궁금한가요?'}
+                  {sheetMode === 'amber'
+                    ? priperMask
+                      ? `${priperMask}로 나왔네요. 이 결과를 보면서 어떤 느낌이 들었어요?`
+                      : '지금까지 나눈 것들을 정리해봤어요. 같이 확인해봐요.'
+                    : priperMask
+                      ? `${priperMask} 패턴을 분석했어요. 어떤 부분이 가장 눈에 띄어요?`
+                      : '패턴을 분석했어요. 어떤 부분이 궁금한가요?'}
                 </div>
                 <div style={{ fontSize: '9px', fontWeight: 300, color: sheetMode === 'amber' ? '#D4A57477' : '#7BA8C477', marginTop: '2px' }}>
                   {sheetMode === 'amber' ? '발견하는 중이에요' : '냉철하게 분석해요'}

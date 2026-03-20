@@ -196,18 +196,38 @@ function AISheet({
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
   }, [msgs]);
 
+  const AMBER_POOL = [
+    '그 마음, 잘 들었어요. 조금 더 이야기해줄 수 있어요?',
+    '그 감정이 언제 가장 강하게 올라와요?',
+    '지금 나에 대해 새롭게 알게 된 게 있어요?',
+    '어떤 관계에서 그게 가장 많이 나타나요?',
+    '그 페르소나가 언제부터 있었던 것 같아요?',
+    '그 패턴이 당신을 어떻게 보호해왔어요?',
+    '지금 가장 달라지고 싶은 게 뭐예요?',
+    '오늘 어떤 상황이 있었어요?',
+    '그게 지금 어떤 기분이에요?',
+    '어떤 관계에서 진짜 나와 가장 가까운 것 같아요?',
+  ];
+  const FROST_POOL = [
+    '흥미로운 패턴이에요. 데이터를 더 모아야 정확해질 것 같아요.',
+    '이 반응이 얼마나 자주 반복돼요?',
+    '어떤 트리거가 이 패턴을 활성화해요?',
+    '4축 점수와 연결해서 생각해봐요. 어떤 축이 이 상황에서 가장 크게 작동했어요?',
+    'Zone 데이터를 보면 닫힌 영역과 연결될 수 있어요.',
+    '감정이 아니라 행동 패턴으로 봐요. 어떤 행동이 반복됐어요?',
+    '이 패턴의 보상 구조가 뭔지 알면 더 빨리 이해할 수 있어요.',
+    '변화를 원한다면 — 어떤 상황에서 이 패턴이 작동 안 했는지 찾는 게 먼저예요.',
+  ];
+
   const send = () => {
     const t = input.trim();
     if (!t) return;
     setMsgs(prev => [...prev, { role: 'user', text: t }]);
     setInput('');
+    const pool = type === 'amber' ? AMBER_POOL : FROST_POOL;
+    const reply = pool[Math.floor(Math.random() * pool.length)];
     setTimeout(() => {
-      setMsgs(prev => [...prev, {
-        role: 'ai',
-        text: type === 'amber'
-          ? '그 마음, 잘 들었어요. 조금 더 이야기해줄 수 있어요?'
-          : '흥미로운 패턴이에요. 데이터를 더 모아야 정확해질 것 같아요.',
-      }]);
+      setMsgs(prev => [...prev, { role: 'ai', text: reply }]);
     }, 900);
   };
 
