@@ -1,0 +1,274 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PRIPER Design System — all colors are HSL */
+
+@layer base {
+  :root {
+    /* Core monochrome palette */
+    --background: 0 0% 0%;          /* absolute black */
+    --foreground: 0 0% 100%;        /* pure white */
+
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 220 9% 65%; /* gray-400 #9CA3AF */
+    
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 215 28% 17%; /* gray-800 #1F2937 */
+    --input: 215 28% 17%; /* gray-800 #1F2937 */
+    --ring: 220 15% 70%; /* subtle bluish ring for focus */
+
+    --radius: 1.25rem; /* softer device-like corners */
+
+    /* Signature effects */
+    --glow: 220 90% 56%;
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 12%), hsl(0 0% 6%));
+  }
+
+  .dark {
+    /* Mirror root for parity */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 220 9% 65%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 220 15% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans font-light tracking-normal leading-relaxed;
+  }
+
+  h1, h2, h3 {
+    @apply font-light tracking-wide;
+  }
+
+  strong, b {
+    @apply font-medium;
+  }
+
+  /* Focus visible for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* ── Veilrum Design Tokens ── */
+:root {
+  --vr-bg:       #1C1917;
+  --vr-bg2:      #242120;
+  --vr-bg3:      #292524;
+  --vr-border:   #3C3835;
+  --vr-border2:  #2A2624;
+  --vr-text:     #E7E5E4;
+  --vr-text2:    #A8A29E;
+  --vr-text3:    #78716C;
+  --vr-text4:    #57534E;
+  --vr-text5:    #3C3835;
+  /* Amber */
+  --amber:       #D4A574;
+  --amber-dim:   #A07850;
+  --amber-gold:  #E7C17A;
+  /* Frost */
+  --frost:       #7BA8C4;
+}
+
+/* Veilrum 전용 타이포 */
+.font-cg {
+  font-family: 'Cormorant Garamond', serif;
+}
+.font-dm {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Amber 어텐션 애니메이션 */
+@keyframes amber-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(212,165,116,0); transform: scale(1); }
+  20%  { box-shadow: 0 0 0 7px rgba(212,165,116,0.4); transform: scale(1.12); }
+  40%  { box-shadow: 0 0 0 3px rgba(212,165,116,0.15); transform: scale(1.05); }
+  60%  { box-shadow: 0 0 0 9px rgba(212,165,116,0.25); transform: scale(1.08); }
+  100% { box-shadow: 0 0 0 0 rgba(212,165,116,0); transform: scale(1); }
+}
+@keyframes ai-pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:0; transform:scale(1.4); }
+}
+@keyframes vr-fade-up {
+  from { opacity:0; transform:translateY(7px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.amber-flash { animation: amber-flash 1.4s ease-out forwards; }
+.vr-fade-in  { animation: vr-fade-up .32s ease both; }
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.4s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
+
+.skeleton {
+  @apply animate-pulse bg-muted;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 30%;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/30;
+}
+
+/* Selection styling */
+::selection {
+  @apply bg-primary/20;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
