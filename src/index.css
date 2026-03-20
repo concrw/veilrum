@@ -92,6 +92,53 @@
   }
 }
 
+/* ── Veilrum Design Tokens ── */
+:root {
+  --vr-bg:       #1C1917;
+  --vr-bg2:      #242120;
+  --vr-bg3:      #292524;
+  --vr-border:   #3C3835;
+  --vr-border2:  #2A2624;
+  --vr-text:     #E7E5E4;
+  --vr-text2:    #A8A29E;
+  --vr-text3:    #78716C;
+  --vr-text4:    #57534E;
+  --vr-text5:    #3C3835;
+  /* Amber */
+  --amber:       #D4A574;
+  --amber-dim:   #A07850;
+  --amber-gold:  #E7C17A;
+  /* Frost */
+  --frost:       #7BA8C4;
+}
+
+/* Veilrum 전용 타이포 */
+.font-cg {
+  font-family: 'Cormorant Garamond', serif;
+}
+.font-dm {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Amber 어텐션 애니메이션 */
+@keyframes amber-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(212,165,116,0); transform: scale(1); }
+  20%  { box-shadow: 0 0 0 7px rgba(212,165,116,0.4); transform: scale(1.12); }
+  40%  { box-shadow: 0 0 0 3px rgba(212,165,116,0.15); transform: scale(1.05); }
+  60%  { box-shadow: 0 0 0 9px rgba(212,165,116,0.25); transform: scale(1.08); }
+  100% { box-shadow: 0 0 0 0 rgba(212,165,116,0); transform: scale(1); }
+}
+@keyframes ai-pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:0; transform:scale(1.4); }
+}
+@keyframes vr-fade-up {
+  from { opacity:0; transform:translateY(7px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.amber-flash { animation: amber-flash 1.4s ease-out forwards; }
+.vr-fade-in  { animation: vr-fade-up .32s ease both; }
+
 /* Custom animations */
 @keyframes fadeIn {
   from {

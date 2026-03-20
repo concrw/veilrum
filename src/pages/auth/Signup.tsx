@@ -22,7 +22,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate('/why', { replace: true });
+      navigate('/', { replace: true });
     }
   }, [user, loading, navigate]);
 
@@ -144,19 +144,14 @@ const Signup = () => {
   return (
     <main className="min-h-screen bg-background px-4 py-6">
       <header className="mb-8 text-center">
-        <img
-          src="/lovable-uploads/01961ee6-f231-439d-a4f0-45342dd0623f.png"
-          width={168}
-          alt="PRIPER 로고"
-          className="mx-auto mt-5 opacity-90"
-        />
+        <h1 className="text-3xl font-bold tracking-tight mx-auto mt-5">VEILRUM</h1>
       </header>
 
       <Card className="bg-card/60 max-w-sm mx-auto">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-lg font-medium">회원가입</CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            나만의 Prime Perspective를 발견하세요
+            당신의 관계 언어를 발견하세요
           </p>
         </CardHeader>
         

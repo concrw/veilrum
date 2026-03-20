@@ -6,53 +6,69 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import BottomNav from "./components/BottomNav";
+import type { OnboardingStep } from "./context/AuthContext";
 
-// Lazy load pages for code splitting
-const Index = lazy(() => import("./pages/Index"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Onboarding = lazy(() => import("./pages/Onboarding"));
-const Brainstorm = lazy(() => import("./pages/Brainstorm"));
-const Define = lazy(() => import("./pages/Define"));
-const Classify = lazy(() => import("./pages/Classify"));
-const Results = lazy(() => import("./pages/Results"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Login = lazy(() => import("./pages/auth/Login"));
-const Signup = lazy(() => import("./pages/auth/Signup"));
-const BrandDesign = lazy(() => import("./pages/BrandDesign"));
-const Community = lazy(() => import("./pages/Community"));
-const Ikigai = lazy(() => import("./pages/Ikigai"));
-const Why = lazy(() => import("./pages/Why"));
-const WhyAnalysis = lazy(() => import("./pages/WhyAnalysis"));
-const Personas = lazy(() => import("./pages/Personas"));
-const PersonaRelationships = lazy(() => import("./pages/PersonaRelationships"));
-const GroupDetail = lazy(() => import("./pages/GroupDetail"));
-const Chat = lazy(() => import("./pages/Chat"));
-const Admin = lazy(() => import("./pages/Admin"));
+// ── Auth ─────────────────────────────────────────────────────────
+const Login    = lazy(() => import("./pages/auth/Login"));
+const Signup   = lazy(() => import("./pages/auth/Signup"));
+
+// ── Onboarding ───────────────────────────────────────────────────
+const Welcome        = lazy(() => import("./pages/onboarding/Welcome"));
+const CoreQuestions  = lazy(() => import("./pages/onboarding/CoreQuestions"));
+const PriperStart    = lazy(() => import("./pages/onboarding/priper/Start"));
+const PriperQuestions = lazy(() => import("./pages/onboarding/priper/Questions"));
+const PriperResult   = lazy(() => import("./pages/onboarding/priper/Result"));
+
+// ── Main ─────────────────────────────────────────────────────────
+const HomeLayout  = lazy(() => import("./layouts/HomeLayout"));
+const VentPage    = lazy(() => import("./pages/home/VentPage"));
+const DigPage     = lazy(() => import("./pages/home/DigPage"));
+const GetPage     = lazy(() => import("./pages/home/GetPage"));
+const SetPage     = lazy(() => import("./pages/home/SetPage"));
+const MePage      = lazy(() => import("./pages/home/MePage"));
+const NotFound    = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
-// Loading fallback component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="text-center">
-      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-      <p className="text-xs text-muted-foreground">Loading...</p>
-    </div>
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-
   if (loading) return <PageLoader />;
-
-  if (!user) {
-    return <Navigate to="/auth/login" replace state={{ from: location }} />;
-  }
-
+  if (!user) return <Navigate to="/auth/login" replace state={{ from: location }} />;
   return children;
+};
+
+const RequireOnboarding = ({ children }: { children: JSX.Element }) => {
+  const { onboardingStep } = useAuth();
+  const stepPath: Record<OnboardingStep, string> = {
+    welcome: '/onboarding/welcome', cq: '/onboarding/cq',
+    priper: '/onboarding/priper/start', completed: '/home',
+  };
+  if (onboardingStep !== 'completed') return <Navigate to={stepPath[onboardingStep]} replace />;
+  return children;
+};
+
+const OnboardingGuard = ({ children }: { children: JSX.Element }) => {
+  const { onboardingStep } = useAuth();
+  if (onboardingStep === 'completed') return <Navigate to="/home" replace />;
+  return children;
+};
+
+const RootRedirect = () => {
+  const { user, loading, onboardingStep } = useAuth();
+  if (loading) return <PageLoader />;
+  if (!user) return <Navigate to="/auth/login" replace />;
+  const stepPath: Record<OnboardingStep, string> = {
+    welcome: '/onboarding/welcome', cq: '/onboarding/cq',
+    priper: '/onboarding/priper/start', completed: '/home',
+  };
+  return <Navigate to={stepPath[onboardingStep]} replace />;
 };
 
 const App = () => (
@@ -65,33 +81,44 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/why" element={<RequireAuth><Why /></RequireAuth>} />
-                <Route path="/why-analysis" element={<RequireAuth><WhyAnalysis /></RequireAuth>} />
-                <Route path="/personas" element={<RequireAuth><Personas /></RequireAuth>} />
-                <Route path="/personas/relationships" element={<RequireAuth><PersonaRelationships /></RequireAuth>} />
-                <Route path="/ikigai" element={<RequireAuth><Ikigai /></RequireAuth>} />
-                <Route path="/brand" element={<RequireAuth><BrandDesign /></RequireAuth>} />
-                <Route path="/commu" element={<RequireAuth><Community /></RequireAuth>} />
-                <Route path="/me" element={<RequireAuth><Dashboard /></RequireAuth>} />
-                <Route path="/onboarding" element={<RequireAuth><Onboarding /></RequireAuth>} />
-                <Route path="/brainstorm" element={<RequireAuth><Brainstorm /></RequireAuth>} />
-                <Route path="/define" element={<RequireAuth><Define /></RequireAuth>} />
-                <Route path="/classify" element={<RequireAuth><Classify /></RequireAuth>} />
-                <Route path="/results" element={<RequireAuth><Results /></RequireAuth>} />
-                <Route path="/brand-design" element={<RequireAuth><BrandDesign /></RequireAuth>} />
-                <Route path="/community" element={<RequireAuth><Community /></RequireAuth>} />
-                <Route path="/community/group/:groupId" element={<RequireAuth><GroupDetail /></RequireAuth>} />
-                <Route path="/chat" element={<RequireAuth><Chat /></RequireAuth>} />
-                <Route path="/admin" element={<RequireAuth><Admin /></RequireAuth>} />
-                <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
-                <Route path="/auth/login" element={<Login />} />
+                <Route path="/" element={<RootRedirect />} />
+
+                {/* Auth */}
+                <Route path="/auth/login"  element={<Login />} />
                 <Route path="/auth/signup" element={<Signup />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+                {/* 온보딩 */}
+                <Route path="/onboarding/welcome" element={
+                  <RequireAuth><OnboardingGuard><Welcome /></OnboardingGuard></RequireAuth>
+                } />
+                <Route path="/onboarding/cq" element={
+                  <RequireAuth><OnboardingGuard><CoreQuestions /></OnboardingGuard></RequireAuth>
+                } />
+                <Route path="/onboarding/priper/start" element={
+                  <RequireAuth><OnboardingGuard><PriperStart /></OnboardingGuard></RequireAuth>
+                } />
+                <Route path="/onboarding/priper/questions" element={
+                  <RequireAuth><OnboardingGuard><PriperQuestions /></OnboardingGuard></RequireAuth>
+                } />
+                <Route path="/onboarding/priper/result" element={
+                  <RequireAuth><PriperResult /></RequireAuth>
+                } />
+
+                {/* 메인 앱 */}
+                <Route path="/home" element={
+                  <RequireAuth><RequireOnboarding><HomeLayout /></RequireOnboarding></RequireAuth>
+                }>
+                  <Route index        element={<Navigate to="/home/vent" replace />} />
+                  <Route path="vent"  element={<VentPage />} />
+                  <Route path="dig"   element={<DigPage />} />
+                  <Route path="get"   element={<GetPage />} />
+                  <Route path="set"   element={<SetPage />} />
+                  <Route path="me"    element={<MePage />} />
+                </Route>
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-            <BottomNav />
           </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>
