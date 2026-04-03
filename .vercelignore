@@ -1,22 +1,4 @@
-# 소스 코드(src/ + public/) + 빌드 설정만 배포
-# 나머지 전부 제외
-
-# 연구 자료
-01_*/
-02_*/
-03_*/
-04_*/
-05_*/
-06_*/
-07_*/
-08_*/
-M43/
-
-# 중복 앱 디렉토리 (app/ 내부에 별도 프로젝트)
-app/
-
-# Supabase (Edge Function은 별도 배포)
-supabase/
+# 빌드에 불필요한 파일 제외
 
 # 브리핑/문서
 briefing/
@@ -28,11 +10,10 @@ briefing/
 .env
 .env.*
 
-# 빌드 결과물 (Vercel이 자체 빌드)
+# 빌드 결과물
 dist/
 
 # 기타
-scripts/
 *.py
 *.pdf
 *.zip
