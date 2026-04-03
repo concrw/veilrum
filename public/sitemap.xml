@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://veilrum.com/</loc>
+    <loc>https://veilor.ai/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/auth/login</loc>
+    <loc>https://veilor.ai/auth/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/auth/signup</loc>
+    <loc>https://veilor.ai/auth/signup</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/onboarding/welcome</loc>
+    <loc>https://veilor.ai/onboarding/welcome</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/home/vent</loc>
+    <loc>https://veilor.ai/home/vent</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/home/dig</loc>
+    <loc>https://veilor.ai/home/dig</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/home/get</loc>
+    <loc>https://veilor.ai/home/get</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/home/set</loc>
+    <loc>https://veilor.ai/home/set</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://veilrum.com/home/me</loc>
+    <loc>https://veilor.ai/home/me</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
