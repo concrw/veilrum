@@ -189,7 +189,7 @@ const BrandDesign = () => {
   return (
     <>
       <Helmet>
-        <title>브랜드 설계 | PRIPER</title>
+        <title>브랜드 설계 | V-File</title>
         <meta name="description" content="Prime Perspective와 Ikigai 기반 개인 브랜드 전략 설계" />
         <link rel="canonical" href={`${window.location.origin}/brand`} />
       </Helmet>

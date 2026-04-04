@@ -23,8 +23,9 @@ interface AuthContextValue {
   primaryMask: string | null;
   secondaryMask: string | null;
   axisScores: AxisScores | null;
+  personaContextsCompleted: string[];
   setOnboardingStep: (step: OnboardingStep) => Promise<void>;
-  completePriper: (primary: string, secondary: string, scores: AxisScores) => Promise<void>;
+  completePriper: (primary: string, secondary: string, scores: AxisScores, mskCode?: string) => Promise<void>;
   // Auth
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signUp: (email: string, password: string, nickname?: string) => Promise<{ error: AuthError | null }>;
@@ -44,11 +45,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [secondaryMask, setSecondaryMask] = useState<string | null>(null);
   const [axisScores, setAxisScores] = useState<AxisScores | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [personaContextsCompleted, setPersonaContextsCompleted] = useState<string[]>([]);
 
   const syncOnboarding = async (userId: string) => {
     const { data, error } = await veilrumDb
       .from('user_profiles')
-      .select('onboarding_step, priper_completed, primary_mask, secondary_mask, axis_scores')
+      .select('onboarding_step, priper_completed, primary_mask, secondary_mask, axis_scores, persona_contexts_completed')
       .eq('user_id', userId)
       .single();
 
@@ -67,6 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setPrimaryMask(data.primary_mask ?? null);
       setSecondaryMask(data.secondary_mask ?? null);
       setAxisScores(data.axis_scores ?? null);
+      setPersonaContextsCompleted(data.persona_contexts_completed ?? []);
     }
   };
 
@@ -114,7 +117,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, { onConflict: 'user_id' });
   };
 
-  const completePriper = async (primary: string, secondary: string, scores: AxisScores) => {
+  const completePriper = async (primary: string, secondary: string, scores: AxisScores, mskCode?: string) => {
     setPriperCompleted(true);
     setPrimaryMask(primary);
     setSecondaryMask(secondary);
@@ -128,10 +131,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       primary_mask: primary,
       secondary_mask: secondary,
       axis_scores: scores,
+      msk_code: mskCode ?? null,
+      data_source: 'priper',
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id' });
 
-    // 커뮤니티 자동 배치 — Prime Mask 기반
+    // 커뮤니티 자동 배치 — V-File 기반
     // AVD(회피형) → 회피형 그룹 / APV·DEP(불안형) → 불안형 그룹 / 기본 → 소통 그룹
     const MASK_COMMUNITY_MAP: Record<string, string> = {
       AVD: '614dd0d9-ae3d-4622-bc81-08138ca7341c', // 회피형 애착 극복 모임
@@ -139,7 +144,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       DEP: '4865c84c-9772-4f69-9acf-5f9a02ac4fed', // 불안형 동일
     };
     const DEFAULT_GROUP_ID = '651bca71-b44c-425d-ba05-db0e48e21fe2'; // 소통 & 갈등 해결
-    const groupId = MASK_COMMUNITY_MAP[primary] ?? DEFAULT_GROUP_ID;
+    const groupId = MASK_COMMUNITY_MAP[mskCode ?? ''] ?? DEFAULT_GROUP_ID;
     // 이미 가입된 경우 무시 (upsert 대신 insert + onConflict ignore)
     await veilrumDb.from('community_memberships').upsert({
       user_id: user.id,
@@ -192,15 +197,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setPrimaryMask(null);
     setSecondaryMask(null);
     setAxisScores(null);
+    setPersonaContextsCompleted([]);
     toast({ title: '로그아웃', description: '다음에 또 만나요!' });
   };
 
   const value = useMemo<AuthContextValue>(() => ({
     user, session, loading, authError,
-    onboardingStep, priperCompleted, primaryMask, secondaryMask, axisScores,
+    onboardingStep, priperCompleted, primaryMask, secondaryMask, axisScores, personaContextsCompleted,
     setOnboardingStep, completePriper,
     signIn, signUp, signInWithGoogle, signOut,
-  }), [user, session, loading, authError, onboardingStep, priperCompleted, primaryMask, secondaryMask, axisScores]);
+  }), [user, session, loading, authError, onboardingStep, priperCompleted, primaryMask, secondaryMask, axisScores, personaContextsCompleted]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

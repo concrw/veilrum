@@ -62,6 +62,22 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				vr: {
+					bg: '#1C1917',
+					bg2: '#242120',
+					bg3: '#292524',
+					border: '#3C3835',
+					border2: '#2A2624',
+					text: '#E7E5E4',
+					text2: '#A8A29E',
+					text3: '#78716C',
+					text4: '#57534E',
+					text5: '#3C3835',
+					amber: '#D4A574',
+					'amber-gold': '#E7C17A',
+					'amber-dim': '#A07850',
+					frost: '#7BA8C4',
 				}
 			},
 			fontFamily: {

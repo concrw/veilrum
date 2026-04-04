@@ -172,6 +172,14 @@ export default function VentPage() {
   const [amberOpen, setAmberOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [layerActive, setLayerActive] = useState('');
+
+  // AI 설정 로드
+  const aiSettingsRef = useRef<Record<string, string> | null>(null);
+  useEffect(() => {
+    if (!user) return;
+    veilrumDb.from('user_profiles').select('ai_settings').eq('user_id', user.id).single()
+      .then(({ data }) => { if (data?.ai_settings) aiSettingsRef.current = data.ai_settings; });
+  }, [user]);
   const sessionSavedRef = useRef(false);
   const timerRefs = useRef<number[]>([]);
   const greeting = getTimeGreeting();
@@ -296,7 +304,7 @@ export default function VentPage() {
 
     try {
       const { data: aiData, error } = await supabase.functions.invoke('held-chat', {
-        body: { emotion: curEmo, text: txt, userId: user?.id, axisScores: axisScores ?? null, mask: primaryMask ?? null, history: msgs.slice(-6) },
+        body: { emotion: curEmo, text: txt, userId: user?.id, axisScores: axisScores ?? null, mask: primaryMask ?? null, history: msgs.slice(-6), aiSettings: aiSettingsRef.current ?? null, tab: 'vent' },
       });
       if (!error && aiData?.response) { aiText = aiData.response; aiTone = '엠버가 듣고 있어요'; }
     } catch {

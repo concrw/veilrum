@@ -86,7 +86,7 @@ export function WhyAnalysisExportButton({
       pdf.setFontSize(9);
       pdf.setTextColor(128, 128, 128);
       pdf.text(`Generated: ${new Date().toLocaleDateString("ko-KR")}`, 10, footerY);
-      pdf.text(`${userName} | PRIPER`, pdfWidth - 10, footerY, { align: "right" });
+      pdf.text(`${userName} | V-File`, pdfWidth - 10, footerY, { align: "right" });
 
       const fileName = `WHY_Analysis_${userName}_${new Date().getTime()}.pdf`;
       pdf.save(fileName);

@@ -62,7 +62,7 @@ const createSession = async () => {
       }
 
 setSessionId(data.id);
-      localStorage.setItem('priper:last_session_id', data.id);
+      localStorage.setItem('vfile:last_session_id', data.id);
 
       // Start timer
       endTimeRef.current = Date.now() + DURATION_SECONDS * 1000;
@@ -146,7 +146,7 @@ setSessionId(data.id);
   return (
     <>
       <Helmet>
-        <title>직업 브레인스토밍 | PRIPER</title>
+        <title>직업 브레인스토밍 | V-File</title>
         <meta name="description" content="10분간 모든 직업을 떠올려보세요" />
         <link rel="canonical" href={`${window.location.origin}/brainstorm`} />
       </Helmet>

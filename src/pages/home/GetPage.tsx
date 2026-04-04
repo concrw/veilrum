@@ -1,5 +1,5 @@
 // Get — 뿌리가 궁금하다
-// 기능: PRIPER 기반 자기 구조 탐색 + Ikigai / 브랜드 정체성 / 멀티페르소나 (프리미엄)
+// 기능: V-File 기반 자기 구조 탐색 + Ikigai / 브랜드 정체성 / 멀티페르소나 (프리미엄)
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';

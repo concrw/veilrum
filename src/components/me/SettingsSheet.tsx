@@ -5,32 +5,76 @@ import { useAuth } from '@/context/AuthContext';
 import ZoneToggle from './ZoneToggle';
 import { LANG_LABELS } from '@/data/mePageData';
 
+export interface AiSettings {
+  name: string;
+  tone: 'friend' | 'warm' | 'calm' | 'expert';
+  personality: 'empathetic' | 'direct' | 'curious' | 'playful';
+  frequency: 'low' | 'normal' | 'high';
+}
+
+const TONE_OPTIONS: { value: AiSettings['tone']; label: string; desc: string }[] = [
+  { value: 'friend', label: '친구', desc: '편하게 반말로' },
+  { value: 'warm', label: '따뜻한', desc: '부드럽고 수용적으로' },
+  { value: 'calm', label: '차분한', desc: '침착하고 안정적으로' },
+  { value: 'expert', label: '전문가', desc: '분석적이고 명확하게' },
+];
+
+const PERSONALITY_OPTIONS: { value: AiSettings['personality']; label: string }[] = [
+  { value: 'empathetic', label: '공감형' },
+  { value: 'direct', label: '직설형' },
+  { value: 'curious', label: '탐구형' },
+  { value: 'playful', label: '유쾌형' },
+];
+
+const FREQ_OPTIONS: { value: AiSettings['frequency']; label: string }[] = [
+  { value: 'low', label: '가끔' },
+  { value: 'normal', label: '보통' },
+  { value: 'high', label: '자주' },
+];
+
+const DEFAULT_AI_SETTINGS: AiSettings = { name: '엠버', tone: 'warm', personality: 'empathetic', frequency: 'normal' };
+
 function SettingsSheet({
   open, onClose, amberName, frostName,
   onRenameAmber, onRenameFrost, lang, onChangeLang,
+  aiSettings: externalAiSettings, onAiSettingsChange,
 }: {
   open: boolean; onClose: () => void;
   amberName: string; frostName: string;
   onRenameAmber: () => void; onRenameFrost: () => void;
   lang: string; onChangeLang: (l: string) => void;
+  aiSettings?: AiSettings; onAiSettingsChange?: (s: AiSettings) => void;
 }) {
   const { user, signOut } = useAuth();
   const [langOpen, setLangOpen] = useState(false);
   const [notifAmber, setNotifAmber] = useState(true);
   const [notifReport, setNotifReport] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [aiSettings, setAiSettings] = useState<AiSettings>(externalAiSettings ?? DEFAULT_AI_SETTINGS);
+  const [aiCustomOpen, setAiCustomOpen] = useState(false);
 
-  // 알림 설정 DB 로드
+  // 알림 + AI 설정 DB 로드
   useEffect(() => {
     if (!user) return;
-    veilrumDb.from('user_profiles').select('notification_amber, notification_report').eq('user_id', user.id).single()
+    veilrumDb.from('user_profiles').select('notification_amber, notification_report, ai_settings').eq('user_id', user.id).single()
       .then(({ data }) => {
         if (data) {
           if (data.notification_amber !== undefined) setNotifAmber(data.notification_amber);
           if (data.notification_report !== undefined) setNotifReport(data.notification_report);
+          if (data.ai_settings) setAiSettings({ ...DEFAULT_AI_SETTINGS, ...data.ai_settings });
         }
       });
   }, [user]);
+
+  // AI 설정 변경 → DB 저장
+  const updateAiSetting = <K extends keyof AiSettings>(key: K, value: AiSettings[K]) => {
+    const next = { ...aiSettings, [key]: value };
+    setAiSettings(next);
+    onAiSettingsChange?.(next);
+    if (user) {
+      veilrumDb.from('user_profiles').update({ ai_settings: next, updated_at: new Date().toISOString() }).eq('user_id', user.id);
+    }
+  };
 
   // 알림 토글 → DB 저장
   const toggleNotif = async (key: 'notification_amber' | 'notification_report', setter: (v: boolean) => void) => {
@@ -118,6 +162,76 @@ function SettingsSheet({
               <span style={{ fontSize: 11, color: C.text5 }}>›</span>
             </div>
           ))}
+
+          {/* AI 커스터마이징 */}
+          <div onClick={() => setAiCustomOpen(v => !v)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 13px', background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 11, cursor: 'pointer' }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🎛️</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 15, color: C.text, marginBottom: 1 }}>AI 성격 설정</p>
+              <p style={{ fontSize: 10, color: C.text4 }}>
+                {TONE_OPTIONS.find(t => t.value === aiSettings.tone)?.label} · {PERSONALITY_OPTIONS.find(p => p.value === aiSettings.personality)?.label}
+              </p>
+            </div>
+            <span style={{ fontSize: 11, color: C.text5, transform: aiCustomOpen ? 'rotate(90deg)' : 'none', transition: 'transform .2s', display: 'inline-block' }}>›</span>
+          </div>
+          {aiCustomOpen && (
+            <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 11, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {/* 어투 */}
+              <div>
+                <p style={{ fontSize: 10, color: C.text4, marginBottom: 6 }}>어투</p>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {TONE_OPTIONS.map(t => (
+                    <button key={t.value} onClick={() => updateAiSetting('tone', t.value)}
+                      style={{
+                        padding: '6px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer',
+                        border: aiSettings.tone === t.value ? `1px solid ${C.amberGold}` : `1px solid ${C.border}`,
+                        background: aiSettings.tone === t.value ? `${C.amberGold}15` : 'transparent',
+                        color: aiSettings.tone === t.value ? C.amberGold : C.text3,
+                      }}>
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+                <p style={{ fontSize: 9, color: C.text5, marginTop: 4 }}>
+                  {TONE_OPTIONS.find(t => t.value === aiSettings.tone)?.desc}
+                </p>
+              </div>
+              {/* 성격 */}
+              <div>
+                <p style={{ fontSize: 10, color: C.text4, marginBottom: 6 }}>성격</p>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {PERSONALITY_OPTIONS.map(p => (
+                    <button key={p.value} onClick={() => updateAiSetting('personality', p.value)}
+                      style={{
+                        padding: '6px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer',
+                        border: aiSettings.personality === p.value ? `1px solid ${C.amberGold}` : `1px solid ${C.border}`,
+                        background: aiSettings.personality === p.value ? `${C.amberGold}15` : 'transparent',
+                        color: aiSettings.personality === p.value ? C.amberGold : C.text3,
+                      }}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* 말 거는 빈도 */}
+              <div>
+                <p style={{ fontSize: 10, color: C.text4, marginBottom: 6 }}>말 거는 빈도</p>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {FREQ_OPTIONS.map(f => (
+                    <button key={f.value} onClick={() => updateAiSetting('frequency', f.value)}
+                      style={{
+                        padding: '6px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer', flex: 1,
+                        border: aiSettings.frequency === f.value ? `1px solid ${C.amberGold}` : `1px solid ${C.border}`,
+                        background: aiSettings.frequency === f.value ? `${C.amberGold}15` : 'transparent',
+                        color: aiSettings.frequency === f.value ? C.amberGold : C.text3,
+                      }}>
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 알림 */}
           <p style={{ fontSize: 9, fontWeight: 400, letterSpacing: '.09em', textTransform: 'uppercase', color: C.text5, padding: '8px 0 4px' }}>알림</p>

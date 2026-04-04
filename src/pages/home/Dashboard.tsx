@@ -55,7 +55,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-3">
         {[
           { label: 'DIVE', desc: '관계 상담', path: '/home/dive', emoji: '🌊' },
-          { label: 'PRIPER', desc: '가면 재진단', path: '/home/priper', emoji: '🎭' },
+          { label: 'V-File', desc: '가면 재진단', path: '/home/priper', emoji: '🎭' },
           { label: 'Community', desc: '그룹 피드', path: '/home/community', emoji: '👥' },
           { label: 'CODETALK', desc: '100일 기록', path: '/home/codetalk', emoji: '💬' },
         ].map(item => (

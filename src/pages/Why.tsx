@@ -39,7 +39,7 @@ const Why = () => {
   return (
     <>
       <Helmet>
-        <title>WHY 단계별 플로우 | PRIPER</title>
+        <title>WHY 단계별 플로우 | V-File</title>
         <meta name="description" content="10분 브레인스토밍부터 정의·분류·결과까지 한 페이지에서 흐름대로 진행" />
         <link rel="canonical" href={`${window.location.origin}/why`} />
       </Helmet>

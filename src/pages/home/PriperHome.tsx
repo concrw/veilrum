@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
-import { MASK_PROFILES } from '@/lib/priperAlgorithm';
+import { MASK_PROFILES } from '@/lib/vfileAlgorithm';
 import { Button } from '@/components/ui/button';
 
 export default function PriperHome() {
@@ -21,7 +21,7 @@ export default function PriperHome() {
       {mask ? (
         <>
           <div className="text-center space-y-2">
-            <p className="text-xs text-muted-foreground uppercase tracking-widest">나의 Prime Mask</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest">나의 V-File</p>
             <h2 className="text-3xl font-bold" style={{ color: mask.color }}>{mask.nameKo}</h2>
             <p className="text-sm text-muted-foreground">{mask.archetype}</p>
             {secondaryMask && secondaryMask !== primaryMask && (
@@ -49,14 +49,14 @@ export default function PriperHome() {
             </div>
           </div>
 
-          <Button variant="outline" className="w-full" onClick={() => navigate('/onboarding/priper/start')}>
+          <Button variant="outline" className="w-full" onClick={() => navigate('/onboarding/vfile/start')}>
             재분석하기
           </Button>
         </>
       ) : (
         <div className="text-center py-16 space-y-4">
           <p className="text-muted-foreground">아직 분석을 완료하지 않았어요</p>
-          <Button onClick={() => navigate('/onboarding/priper/start')}>분석 시작</Button>
+          <Button onClick={() => navigate('/onboarding/vfile/start')}>분석 시작</Button>
         </div>
       )}
     </div>

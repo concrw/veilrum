@@ -104,7 +104,7 @@ export const PersonalMatchRequest = ({ onSubmit, isLoading }: PersonalMatchReque
         <div className="bg-muted/50 p-3 rounded-lg space-y-2">
           <h5 className="text-xs font-medium">📋 분석 조건</h5>
           <ul className="text-xs text-muted-foreground space-y-1">
-            <li>• 상대방이 PRIPER 회원이어야 합니다</li>
+            <li>• 상대방이 V-File 회원이어야 합니다</li>
             <li>• 상대방이 Why 분석을 완료했어야 합니다</li>
             <li>• 상대방이 분석 요청을 수락해야 합니다</li>
             <li>• 양쪽 모두 데이터가 충분해야 신뢰할 수 있습니다</li>

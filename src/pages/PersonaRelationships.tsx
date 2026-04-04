@@ -9,7 +9,7 @@ export default function PersonaRelationships() {
   return (
     <>
       <Helmet>
-        <title>페르소나 관계 분석 | PRIPER</title>
+        <title>페르소나 관계 분석 | V-File</title>
         <meta
           name="description"
           content="여러 페르소나 간의 시너지를 분석하고 통합 브랜딩 전략을 수립하세요"

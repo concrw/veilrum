@@ -88,9 +88,18 @@ export default function MePage() {
   const [shareToast, setShareToast] = useState(false);
 
   const calcPct = useCallback(() => {
-    const on = Object.values(zoneState).filter(Boolean).length;
-    return Math.round(on / TOTAL_ZONES * 100);
-  }, [zoneState]);
+    // 정밀도% = Zone 토글(40%) + 실제 사용 데이터(60%)
+    const zoneOn = Object.values(zoneState).filter(Boolean).length;
+    const zonePct = zoneOn / TOTAL_ZONES; // 0~1
+
+    const stats = meData?.stats;
+    const sessionScore = Math.min((stats?.sessionCount ?? 0) / 20, 1);
+    const signalScore = Math.min((stats?.signalCount ?? 0) / 50, 1);
+    const patternScore = Math.min((stats?.patternAreaCount ?? 0) / 5, 1);
+
+    const raw = zonePct * 40 + sessionScore * 25 + signalScore * 20 + patternScore * 15;
+    return Math.min(Math.round(raw), 100);
+  }, [zoneState, meData?.stats]);
 
   const pct = calcPct();
   const closedCount = Object.values(zoneState).filter(v => !v).length;

@@ -10,12 +10,12 @@ interface EmailRequest {
 
 const EMAIL_TEMPLATES = {
   welcome: {
-    subject: "PRIPER에 오신 것을 환영합니다!",
+    subject: "Veilrum에 오신 것을 환영합니다!",
     html: (data: Record<string, unknown>) => `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h1>환영합니다, ${data.name}님!</h1>
-        <p>PRIPER에 가입해 주셔서 감사합니다.</p>
-        <p>이제 자신만의 Prime Perspective를 발견하고 성장할 수 있습니다.</p>
+        <p>Veilrum에 가입해 주셔서 감사합니다.</p>
+        <p>이제 V-File을 통해 자신의 관계 가면을 발견하고 성장할 수 있습니다.</p>
         <a href="${data.appUrl}/why" style="display: inline-block; padding: 12px 24px; background: #000; color: #fff; text-decoration: none; border-radius: 4px; margin-top: 16px;">
           WHY 분석 시작하기
         </a>
@@ -100,7 +100,7 @@ serve(async (req) => {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "PRIPER <noreply@priper.com>",
+        from: "Veilrum <noreply@veilor.ai>",
         to: [to],
         subject,
         html,

@@ -1,4 +1,4 @@
-// DiagnosisSection — PRIPER result display
+// DiagnosisSection — V-File result display
 import { useState } from 'react';
 import { C } from '@/lib/colors';
 

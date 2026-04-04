@@ -5,11 +5,11 @@ import {
   findMasks,
   generateInsights,
   runDiagnosis,
-} from '@/lib/priperAlgorithm';
-import type { MaskProfile, DiagnosisResult } from '@/lib/priperAlgorithm';
+} from '@/lib/vfileAlgorithm';
+import type { MaskProfile, DiagnosisResult } from '@/lib/vfileAlgorithm';
 import type { AxisScores } from '@/context/AuthContext';
 
-describe('priperAlgorithm', () => {
+describe('vfileAlgorithm (V-File)', () => {
   describe('MASK_PROFILES', () => {
     it('contains exactly 12 masks', () => {
       expect(MASK_PROFILES).toHaveLength(12);
@@ -58,16 +58,18 @@ describe('priperAlgorithm', () => {
   });
 
   describe('findMasks (euclidean distance)', () => {
-    it('high attachment score maps near mirror/glass mask', () => {
+    it('high attachment score maps near mirror(EMP) mask', () => {
       const scores: AxisScores = { A: 80, B: 25, C: 20, D: 15 };
       const { primary } = findMasks(scores);
-      expect(['mirror', 'glass']).toContain(primary.id);
+      expect(['mirror', 'victim']).toContain(primary.id); // EMP(거울) or DEP(희생자)
     });
 
-    it('low all scores maps near stone mask', () => {
+    it('low all scores maps near achiever(NRC) mask', () => {
+      // 공허자(NRC): A:15, B:15, C:15, D:30
       const scores: AxisScores = { A: 15, B: 15, C: 15, D: 30 };
       const { primary } = findMasks(scores);
-      expect(primary.id).toBe('stone');
+      expect(primary.id).toBe('achiever'); // 공허자(NRC)
+      expect(primary.mskCode).toBe('NRC');
     });
 
     it('returns primary and secondary that are different', () => {
@@ -77,13 +79,11 @@ describe('priperAlgorithm', () => {
     });
 
     it('isComplex is true when top 2 distances are close', () => {
-      // Spider scores: A:85, B:80, C:85, D:80
-      // Velvet scores: A:55, B:75, C:85, D:80
-      // Scores exactly matching spider should have isComplex = false
-      const exactSpider: AxisScores = { A: 85, B: 80, C: 85, D: 80 };
-      const result = findMasks(exactSpider);
-      expect(result.primary.id).toBe('spider');
-      // isComplex depends on gap — just verify it's boolean
+      // Explorer(PSP) scores: A:85, B:80, C:85, D:80
+      const exactExplorer: AxisScores = { A: 85, B: 80, C: 85, D: 80 };
+      const result = findMasks(exactExplorer);
+      expect(result.primary.id).toBe('explorer'); // 탐험자(PSP)
+      expect(result.primary.mskCode).toBe('PSP');
       expect(typeof result.isComplex).toBe('boolean');
     });
   });

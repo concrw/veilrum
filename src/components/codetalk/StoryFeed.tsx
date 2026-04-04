@@ -65,7 +65,26 @@ export function StoryFeed({ keyword, currentDay, feedOpen, publicFeed, todayEntr
                         {new Date(e.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-                    <p className="text-sm leading-relaxed line-clamp-3">{e.definition}</p>
+                    <div className="space-y-1.5">
+                      {e.definition && (
+                        <div>
+                          <span className="text-[10px] text-muted-foreground">정의</span>
+                          <p className="text-sm leading-relaxed line-clamp-2">{e.definition}</p>
+                        </div>
+                      )}
+                      {e.imprinting_moment && (
+                        <div>
+                          <span className="text-[10px] text-muted-foreground">각인</span>
+                          <p className="text-sm leading-relaxed line-clamp-2 text-muted-foreground">{e.imprinting_moment}</p>
+                        </div>
+                      )}
+                      {e.root_cause && (
+                        <div>
+                          <span className="text-[10px] text-muted-foreground">뿌리</span>
+                          <p className="text-sm leading-relaxed line-clamp-2 text-muted-foreground">{e.root_cause}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

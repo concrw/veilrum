@@ -1,4 +1,8 @@
-import { Outlet, NavLink } from 'react-router-dom';
+import { useState, useCallback, useEffect } from 'react';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { useLongPress } from '@/hooks/useLongPress';
+import HoldCircle from '@/components/ai/HoldCircle';
+import AILeadOverlay from '@/components/ai/AILeadOverlay';
 
 // 탭별 포인트 컬러 (인계문서 §2 기준)
 const TABS = [
@@ -46,11 +50,61 @@ export function FrostBtn({ onClick }: { onClick: () => void }) {
 }
 
 export default function HomeLayout() {
+  const [aiLeadOpen, setAiLeadOpen] = useState(false);
+  const [holding, setHolding] = useState(false);
+  const location = useLocation();
+
+  // 현재 탭 감지
+  const currentTab = location.pathname.split('/').pop() ?? '';
+
+  const openAILead = useCallback(() => {
+    setHolding(false);
+    setAiLeadOpen(true);
+  }, []);
+
+  // 키보드 단축키: Ctrl+Shift+A — 시각장애인/키보드 사용자를 위한 대안
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        setAiLeadOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  const longPressHandlers = useLongPress(openAILead, {
+    threshold: 600,
+    vibrate: true,
+    onStart: () => setHolding(true),
+    onEnd: () => setHolding(false),
+  });
+
   return (
     <div
       className="flex flex-col"
       style={{ minHeight: '100dvh', background: '#1C1917', fontFamily: "'DM Sans', sans-serif" }}
+      {...longPressHandlers}
     >
+      {/* 스크린리더 전용: AI 모드 진입 안내 */}
+      <button
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-black focus:text-white focus:px-3 focus:py-2 focus:rounded"
+        onClick={() => setAiLeadOpen(true)}
+      >
+        AI 대화 모드 열기 (Ctrl+Shift+A)
+      </button>
+
+      {/* 롱프레스 홀드 서클 */}
+      <HoldCircle active={holding} duration={600} />
+
+      {/* AI 리드 모드 오버레이 */}
+      <AILeadOverlay
+        open={aiLeadOpen}
+        onClose={() => setAiLeadOpen(false)}
+        currentTab={currentTab}
+      />
+
       {/* 콘텐츠 */}
       <main id="main-content" className="flex-1 overflow-y-auto" style={{ paddingBottom: '64px' }}>
         <Outlet />

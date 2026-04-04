@@ -121,7 +121,7 @@ const Define = () => {
   return (
     <>
       <Helmet>
-        <title>직업 정의 | PRIPER</title>
+        <title>직업 정의 | V-File</title>
         <meta name="description" content="이전 브레인스토밍 직업들에 대한 정의와 각인 순간을 작성하세요." />
         <link rel="canonical" href={`${window.location.origin}/define`} />
       </Helmet>

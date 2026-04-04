@@ -261,7 +261,7 @@ const Results = () => {
   return (
     <>
       <Helmet>
-        <title>Prime Perspective 결과 | PRIPER</title>
+        <title>Prime Perspective 결과 | V-File</title>
         <meta name="description" content="당신의 분류 데이터를 분석해 Prime Perspective를 도출한 결과 페이지" />
         <link rel="canonical" href={`${window.location.origin}/results`} />
       </Helmet>

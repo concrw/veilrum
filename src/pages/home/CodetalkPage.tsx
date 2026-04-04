@@ -128,7 +128,7 @@ export default function CodetalkPage() {
     queryKey: ['codetalk-public-feed', keyword?.id, keyword?.day_number],
     queryFn: async () => {
       const { data } = await veilrumDb.from('codetalk_entries')
-        .select('anon_alias, keyword, definition, created_at, entry_date')
+        .select('anon_alias, keyword, definition, imprinting_moment, root_cause, created_at, entry_date')
         .eq('keyword_id', keyword!.id).eq('is_public', true).neq('user_id', user!.id)
         .order('created_at', { ascending: false }).limit(20);
       const virtualEntries = getVirtualCodetalkEntries(keyword!.day_number).map(v => ({

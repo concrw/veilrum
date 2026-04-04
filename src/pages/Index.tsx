@@ -33,7 +33,7 @@ const Index = () => {
   }, [user]);
   return <>
       <Helmet>
-        <title>PRIPER — 나를 나답게 만드는 관점</title>
+        <title>V-File — 나를 나답게 만드는 관점</title>
         <meta name="description" content="AI와 함께하는 깊이 있는 자기 발견 여정" />
         <link rel="canonical" href={`${window.location.origin}/`} />
       </Helmet>
@@ -42,7 +42,7 @@ const Index = () => {
         if (e.key === 'Enter' || e.key === ' ') goHome();
       }} aria-label="첫 화면 - WHY로 이동">
           <main className="h-full w-full relative">
-            <img src="/lovable-uploads/194c7968-5fbf-4e94-b3bd-b260ff6f6c83.png" alt="PRIPER 시작이미지" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+            <img src="/lovable-uploads/194c7968-5fbf-4e94-b3bd-b260ff6f6c83.png" alt="V-File 시작이미지" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
             <div className="absolute inset-0 grid place-items-center z-20">
               <Logo size={224} className="text-foreground" />
             </div>

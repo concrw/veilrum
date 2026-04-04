@@ -213,7 +213,7 @@ const WhyAnalysis = () => {
     return (
       <>
         <Helmet>
-          <title>WHY 분석결과 | PRIPER</title>
+          <title>WHY 분석결과 | V-File</title>
           <meta name="description" content="WHY 분석을 통한 개인별 Prime Perspective 도출 결과" />
         </Helmet>
         
@@ -251,7 +251,7 @@ const WhyAnalysis = () => {
   return (
     <>
       <Helmet>
-        <title>WHY 분석결과 | PRIPER</title>
+        <title>WHY 분석결과 | V-File</title>
         <meta name="description" content="WHY 분석을 통한 개인별 Prime Perspective 도출 결과" />
       </Helmet>
       

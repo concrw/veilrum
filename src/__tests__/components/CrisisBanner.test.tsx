@@ -14,16 +14,25 @@ describe('CrisisBanner', () => {
     expect(screen.getByText(/지금 많이 힘드시군요/)).toBeInTheDocument();
   });
 
-  it('shows hotline number 1393', () => {
+  it('stage 1 shows stabilize and connect buttons', () => {
     render(<CrisisBanner severity="high" />);
-    const link1393 = screen.getByText(/1393/);
-    expect(link1393).toBeInTheDocument();
+    expect(screen.getByText(/먼저 마음을 가라앉히기/)).toBeInTheDocument();
+    expect(screen.getByText(/전문가에게 연락하기/)).toBeInTheDocument();
   });
 
-  it('shows hotline number 1577-0199', () => {
+  it('clicking connect button shows hotline numbers', () => {
     render(<CrisisBanner severity="high" />);
-    const link1577 = screen.getByText(/1577-0199/);
-    expect(link1577).toBeInTheDocument();
+    fireEvent.click(screen.getByText(/전문가에게 연락하기/));
+    expect(screen.getByText(/1393/)).toBeInTheDocument();
+    expect(screen.getByText(/1577-0199/)).toBeInTheDocument();
+    expect(screen.getByText(/1588-9191/)).toBeInTheDocument();
+  });
+
+  it('clicking stabilize button shows breathing and grounding options', () => {
+    render(<CrisisBanner severity="high" />);
+    fireEvent.click(screen.getByText(/먼저 마음을 가라앉히기/));
+    expect(screen.getByText(/호흡 가이드/)).toBeInTheDocument();
+    expect(screen.getByText(/그라운딩/)).toBeInTheDocument();
   });
 
   it('dismiss button calls onDismiss', () => {
@@ -38,14 +47,6 @@ describe('CrisisBanner', () => {
     expect(screen.queryByLabelText('배너 닫기')).not.toBeInTheDocument();
   });
 
-  it('"더 많은 도움" button expands additional resources', () => {
-    render(<CrisisBanner severity="high" />);
-    expect(screen.queryByText(/생명의전화/)).not.toBeInTheDocument();
-    fireEvent.click(screen.getByText(/더 많은 도움/));
-    expect(screen.getByText(/생명의전화/)).toBeInTheDocument();
-    expect(screen.getByText(/1588-9191/)).toBeInTheDocument();
-  });
-
   it('has role="alert" and aria-live="assertive"', () => {
     render(<CrisisBanner severity="critical" />);
     const alert = screen.getByRole('alert');
@@ -57,8 +58,10 @@ describe('CrisisBanner', () => {
     expect(screen.getByText(/이 앱은 전문 상담을 대체하지 않습니다/)).toBeInTheDocument();
   });
 
-  it('critical severity shows immediate action text', () => {
+  it('stage progress indicator is visible', () => {
     render(<CrisisBanner severity="critical" />);
-    expect(screen.getByText(/지금 바로 전문가와 이야기해 주세요/)).toBeInTheDocument();
+    // 3 단계 진행바 존재
+    const alert = screen.getByRole('alert');
+    expect(alert).toBeInTheDocument();
   });
 });

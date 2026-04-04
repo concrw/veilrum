@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
-import { runDiagnosis } from '@/lib/vfileAlgorithm';
-import type { DiagnosisResult } from '@/lib/vfileAlgorithm';
+import { runDiagnosis, VFILE_CONTEXT_LABELS } from '@/lib/vfileAlgorithm';
+import type { DiagnosisResult, VFileContext } from '@/lib/vfileAlgorithm';
 import { Button } from '@/components/ui/button';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
 import { supabase, veilrumDb } from '@/integrations/supabase/client';
@@ -15,11 +15,15 @@ export default function PriperResult() {
   const [result, setResult] = useState<DiagnosisResult | null>(null);
   const [revealed, setRevealed] = useState(false);
 
-  useEffect(() => {
-    const responses = (location.state as { responses?: Record<string, string> } | null)?.responses;
-    if (!responses) { navigate('/onboarding/priper/questions', { replace: true }); return; }
+  const stateData = location.state as { responses?: Record<string, string>; context?: VFileContext } | null;
+  const context: VFileContext = stateData?.context ?? 'general';
+  const contextLabel = VFILE_CONTEXT_LABELS[context];
 
-    const r = runDiagnosis(responses);
+  useEffect(() => {
+    const responses = stateData?.responses;
+    if (!responses) { navigate('/onboarding/vfile/questions', { replace: true }); return; }
+
+    const r = runDiagnosis(responses, context);
     setResult(r);
 
     // DB 저장
@@ -35,19 +39,60 @@ export default function PriperResult() {
         is_completed: true,
         completed_at: new Date().toISOString(),
         data_source: 'priper',
+        context,
       });
-      // prime_perspectives 초기 레코드 생성 (첫 분석 기준)
-      veilrumDb.from('prime_perspectives').upsert({
+
+      // persona_profiles에 맥락별 페르소나 저장 (upsert)
+      const rankMap: Record<VFileContext, number> = { general: 1, social: 2, secret: 3 };
+      veilrumDb.from('persona_profiles').upsert({
         user_id: user.id,
-        version: 1,
-        attachment_type: r.primary.id,
-        persona_type: r.primary.nameKo,
-        confidence_score: Math.round(100 - (r.primary.scores.A - r.scores.A) ** 2 / 100),
-        data_source: 'priper',
-        is_complete: false,
-        signal_count: 0,
+        vfile_context: context,
+        msk_code: r.primary.mskCode,
+        primary_mask: r.primary.nameKo,
+        secondary_mask: r.secondary.nameKo,
+        axis_scores: r.scores,
+        is_complex: r.isComplex,
+        insights: r.insights,
+        persona_name: contextLabel.ko,
+        color_hex: r.primary.color,
+        rank_order: rankMap[context],
         updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' });
+      }, { onConflict: 'user_id,vfile_context' });
+
+      // general 맥락일 때만 prime_perspectives 업데이트
+      if (context === 'general') {
+        veilrumDb.from('prime_perspectives').upsert({
+          user_id: user.id,
+          version: 1,
+          attachment_type: r.primary.id,
+          persona_type: r.primary.nameKo,
+          confidence_score: Math.round(100 - (r.primary.scores.A - r.scores.A) ** 2 / 100),
+          data_source: 'priper',
+          is_complete: false,
+          signal_count: 0,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' });
+      }
+
+      // 완료된 맥락 목록 업데이트
+      veilrumDb.rpc('array_append_unique', {
+        p_user_id: user.id,
+        p_context: context,
+      }).then(() => {}).catch(() => {
+        // RPC가 없을 수 있음 — fallback: 직접 업데이트
+        veilrumDb.from('user_profiles')
+          .select('persona_contexts_completed')
+          .eq('user_id', user.id)
+          .single()
+          .then(({ data }) => {
+            const existing: string[] = data?.persona_contexts_completed ?? [];
+            if (!existing.includes(context)) {
+              veilrumDb.from('user_profiles').update({
+                persona_contexts_completed: [...existing, context],
+              }).eq('user_id', user.id);
+            }
+          });
+      });
     }
 
     // 가면 공개 애니메이션 딜레이
@@ -55,14 +100,19 @@ export default function PriperResult() {
   }, []);
 
   const qc = useQueryClient();
+  const isOnboarding = context === 'general' && !location.state?.fromGet;
+
   const handleEnter = async () => {
     if (!result) return;
-    await completePriper(result.primary.nameKo, result.secondary.nameKo, result.scores);
+    if (isOnboarding) {
+      await completePriper(result.primary.nameKo, result.secondary.nameKo, result.scores, result.primary.mskCode);
+    }
     // V-File 완료 후 관련 캐시 갱신
     qc.invalidateQueries({ queryKey: ['prime-perspective'] });
     qc.invalidateQueries({ queryKey: ['me-diagnosis'] });
     qc.invalidateQueries({ queryKey: ['me-radar'] });
-    navigate('/home');
+    qc.invalidateQueries({ queryKey: ['persona-profiles'] });
+    navigate(isOnboarding ? '/home' : '/home/get');
   };
 
   if (!result) {
@@ -89,7 +139,9 @@ export default function PriperResult() {
             style={{ backgroundColor: result.primary.color + '20' }}>
             🎭
           </div>
-          <p className="text-xs text-muted-foreground uppercase tracking-widest">당신의 V-File</p>
+          <p className="text-xs text-muted-foreground uppercase tracking-widest">
+            {context !== 'general' ? `${contextLabel.icon} ${contextLabel.ko}` : '당신의 V-File'}
+          </p>
           <h1 className="text-3xl font-bold" style={{ color: result.primary.color }}>
             {result.primary.nameKo}
           </h1>
@@ -128,7 +180,7 @@ export default function PriperResult() {
         </div>
 
         <Button className="w-full h-12 text-base" onClick={handleEnter}>
-          내 관계 언어 탐색 시작 →
+          {isOnboarding ? '내 관계 언어 탐색 시작 →' : '결과 확인 완료'}
         </Button>
 
         <p className="text-[10px] text-muted-foreground/50 leading-relaxed text-center px-2">

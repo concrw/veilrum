@@ -96,7 +96,7 @@ const Classify = () => {
   return (
     <>
       <Helmet>
-        <title>직업 분류 | PRIPER</title>
+        <title>직업 분류 | V-File</title>
         <meta name="description" content="정의한 직업들을 바탕으로 분류를 진행합니다." />
         <link rel="canonical" href={`${window.location.origin}/classify`} />
       </Helmet>

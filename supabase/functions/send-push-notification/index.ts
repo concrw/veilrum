@@ -150,7 +150,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const vapidSubject = "mailto:admin@priper.app";
+    const vapidSubject = "mailto:admin@veilor.ai";
 
     const body: PushRequest = await req.json();
     const { user_id, user_ids, payload, broadcast } = body;
@@ -168,7 +168,7 @@ Deno.serve(async (req) => {
       body: payload.body || "",
       icon: payload.icon || "/icon-192x192.png",
       badge: payload.badge || "/icon-192x192.png",
-      tag: payload.tag || `priper-${Date.now()}`,
+      tag: payload.tag || `veilrum-${Date.now()}`,
       url: payload.url || "/",
       actions: payload.actions || [],
     };

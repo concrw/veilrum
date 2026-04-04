@@ -58,6 +58,29 @@ export default function DigPage() {
   const [interpretation, setInterpretation] = useState('');
   const [interpreting, setInterpreting] = useState(false);
 
+  // Vent→Dig 맥락 연결: 최근 Vent 세션 요약 조회
+  const { data: recentVent } = useQuery({
+    queryKey: ['recent-vent-session', user?.id],
+    queryFn: async () => {
+      const { data } = await veilrumDb
+        .from('dive_sessions')
+        .select('emotion, context_summary, held_keywords, created_at')
+        .eq('user_id', user!.id)
+        .eq('session_completed', true)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (!data) return null;
+      // 24시간 이내 세션만 표시
+      const sessionTime = new Date(data.created_at).getTime();
+      if (Date.now() - sessionTime > 24 * 60 * 60 * 1000) return null;
+      return data;
+    },
+    enabled: !!user,
+    staleTime: 1000 * 60 * 5,
+  });
+  const [ventDismissed, setVentDismissed] = useState(false);
+
   // Dig 히스토리 (최근 20건)
   const { data: digHistory = [], isError: digHistoryError, refetch: refetchHistory } = useQuery<DigHistoryItem[]>({
     queryKey: ['dig-history', user?.id],
@@ -264,6 +287,43 @@ export default function DigPage() {
         <h2 className="text-lg font-semibold">Dig</h2>
         <p className="text-sm text-muted-foreground mt-1">왜 이런 패턴이 반복되는지 파고들어요.</p>
       </div>
+
+      {/* Vent→Dig 맥락 연결 배너 */}
+      {recentVent && !ventDismissed && (
+        <div className="bg-violet-500/5 border border-violet-500/20 rounded-2xl p-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🔗</span>
+              <p className="text-xs font-medium text-violet-400">Vent에서 이런 패턴이 보였어요</p>
+            </div>
+            <button onClick={() => setVentDismissed(true)} className="text-xs text-muted-foreground">✕</button>
+          </div>
+          <p className="text-sm leading-relaxed">
+            {recentVent.emotion && <span className="font-medium">{recentVent.emotion}</span>}
+            {recentVent.context_summary && (
+              <span className="text-muted-foreground"> — {recentVent.context_summary.slice(0, 80)}</span>
+            )}
+          </p>
+          {recentVent.held_keywords && recentVent.held_keywords.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {(recentVent.held_keywords as string[]).slice(0, 5).map((kw: string, i: number) => (
+                <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400">
+                  {kw.slice(0, 20)}
+                </span>
+              ))}
+            </div>
+          )}
+          <button
+            onClick={() => {
+              if (recentVent.emotion) setSituation(recentVent.emotion);
+              setVentDismissed(true);
+            }}
+            className="text-xs text-violet-400 font-medium hover:underline"
+          >
+            이 맥락으로 탐색 시작하기
+          </button>
+        </div>
+      )}
 
       <DigSearchForm
         situation={situation}

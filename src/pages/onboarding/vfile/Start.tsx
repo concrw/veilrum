@@ -33,7 +33,7 @@ export default function PriperStart() {
           ))}
         </div>
 
-        <Button className="w-full h-12 text-base" onClick={() => navigate('/onboarding/priper/questions')}>
+        <Button className="w-full h-12 text-base" onClick={() => navigate('/onboarding/vfile/questions')}>
           분석 시작
         </Button>
 

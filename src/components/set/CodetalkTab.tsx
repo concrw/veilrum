@@ -77,7 +77,27 @@ export default function CodetalkTab({
       ) : (
         <div className="bg-card border rounded-2xl p-5 space-y-3">
           <p className="text-xs text-muted-foreground mb-2">오늘의 기록 ✓</p>
-          <p className="text-sm leading-relaxed">{todayEntry.content}</p>
+          {todayEntry.definition && (
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground">정의</p>
+              <p className="text-sm leading-relaxed">{todayEntry.definition}</p>
+            </div>
+          )}
+          {todayEntry.imprinting_moment && (
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground">각인</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{todayEntry.imprinting_moment}</p>
+            </div>
+          )}
+          {todayEntry.root_cause && (
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground">뿌리</p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{todayEntry.root_cause}</p>
+            </div>
+          )}
+          {!todayEntry.definition && todayEntry.content && (
+            <p className="text-sm leading-relaxed">{todayEntry.content}</p>
+          )}
 
           {/* AI 인사이트 */}
           {aiInsight && (
@@ -107,7 +127,16 @@ export default function CodetalkTab({
                   {new Date(e.entry_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2">{e.content}</p>
+              {e.definition ? (
+                <p className="text-xs text-muted-foreground line-clamp-2">{e.definition}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground line-clamp-2">{e.content}</p>
+              )}
+              {(e.imprinting_moment || e.root_cause) && (
+                <p className="text-[10px] text-muted-foreground/60 mt-1">
+                  {[e.imprinting_moment && '각인', e.root_cause && '뿌리'].filter(Boolean).join(' · ')} 기록됨
+                </p>
+              )}
             </div>
           ))}
         </div>

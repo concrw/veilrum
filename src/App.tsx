@@ -18,9 +18,9 @@ const Signup   = lazy(() => import("./pages/auth/Signup"));
 // ── Onboarding ───────────────────────────────────────────────────
 const Welcome        = lazy(() => import("./pages/onboarding/Welcome"));
 const CoreQuestions  = lazy(() => import("./pages/onboarding/CoreQuestions"));
-const PriperStart    = lazy(() => import("./pages/onboarding/priper/Start"));
-const PriperQuestions = lazy(() => import("./pages/onboarding/priper/Questions"));
-const PriperResult   = lazy(() => import("./pages/onboarding/priper/Result"));
+const VFileStart     = lazy(() => import("./pages/onboarding/vfile/Start"));
+const VFileQuestions = lazy(() => import("./pages/onboarding/vfile/Questions"));
+const VFileResult    = lazy(() => import("./pages/onboarding/vfile/Result"));
 
 // ── Main ─────────────────────────────────────────────────────────
 const HomeLayout  = lazy(() => import("./layouts/HomeLayout"));
@@ -74,7 +74,7 @@ const RequireOnboarding = ({ children }: { children: JSX.Element }) => {
   const { onboardingStep } = useAuth();
   const stepPath: Record<OnboardingStep, string> = {
     welcome: '/onboarding/welcome', cq: '/onboarding/cq',
-    priper: '/onboarding/priper/start', completed: '/home',
+    priper: '/onboarding/vfile/start', completed: '/home',
   };
   if (onboardingStep !== 'completed') return <Navigate to={stepPath[onboardingStep]} replace />;
   return children;
@@ -92,7 +92,7 @@ const RootRedirect = () => {
   if (!user) return <Navigate to="/auth/login" replace />;
   const stepPath: Record<OnboardingStep, string> = {
     welcome: '/onboarding/welcome', cq: '/onboarding/cq',
-    priper: '/onboarding/priper/start', completed: '/home',
+    priper: '/onboarding/vfile/start', completed: '/home',
   };
   return <Navigate to={stepPath[onboardingStep]} replace />;
 };
@@ -127,14 +127,14 @@ const App = () => (
                 <Route path="/onboarding/cq" element={
                   <RequireAuth><OnboardingGuard><CoreQuestions /></OnboardingGuard></RequireAuth>
                 } />
-                <Route path="/onboarding/priper/start" element={
-                  <RequireAuth><PriperStart /></RequireAuth>
+                <Route path="/onboarding/vfile/start" element={
+                  <RequireAuth><VFileStart /></RequireAuth>
                 } />
-                <Route path="/onboarding/priper/questions" element={
-                  <RequireAuth><PriperQuestions /></RequireAuth>
+                <Route path="/onboarding/vfile/questions" element={
+                  <RequireAuth><VFileQuestions /></RequireAuth>
                 } />
-                <Route path="/onboarding/priper/result" element={
-                  <RequireAuth><PriperResult /></RequireAuth>
+                <Route path="/onboarding/vfile/result" element={
+                  <RequireAuth><VFileResult /></RequireAuth>
                 } />
 
                 {/* 메인 앱 */}

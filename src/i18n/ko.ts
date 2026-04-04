@@ -63,7 +63,7 @@ export const ko: LocaleResource = {
       card2Title: '40개의 질문으로 발견합니다',
       card2Desc: '약 8분, 솔직할수록 정확해집니다',
       card3Title: '4개 모듈이 당신에게 맞춰 열립니다',
-      card3Desc: 'PRIPER · CODETALK · DIVE · Community',
+      card3Desc: 'V-File · CODETALK · DIVE · Community',
       startButton: '시작하기',
       disclaimer: 'VEILRUM은 자기탐색 도구이며, 전문 심리상담 또는 치료를 대체하지 않습니다.',
     },
@@ -79,7 +79,7 @@ export const ko: LocaleResource = {
       startAnalysis: '분석 시작하기',
     },
     priper: {
-      startTitle: '당신의 Prime Mask를 찾습니다',
+      startTitle: '당신의 V-File을 찾습니다',
       startDesc: '12가지 관계 가면 중 당신에게 가장 가까운 패턴을 발견합니다',
       info1: '40개 질문 · 약 8분',
       info2: '솔직한 답변일수록 정확합니다',
@@ -87,8 +87,8 @@ export const ko: LocaleResource = {
       info4: '중단 후 이어서 진행 가능합니다',
       startButton: '분석 시작',
       disclaimer:
-        'PRIPER는 자기탐색 도구이며, 전문 심리상담 또는 의료 진단을 대체하지 않습니다. 결과는 탐색적 참고 자료로 활용해 주세요. 정신건강 관련 어려움이 있으시면 전문가 상담을 권장합니다.',
-      resultYourMask: '당신의 Prime Mask',
+        'V-File은 자기탐색 도구이며, 전문 심리상담 또는 의료 진단을 대체하지 않습니다. 결과는 탐색적 참고 자료로 활용해 주세요. 정신건강 관련 어려움이 있으시면 전문가 상담을 권장합니다.',
+      resultYourMask: '당신의 V-File',
       resultComplexType: '복합형',
       resultEnterButton: '내 관계 언어 탐색 시작 →',
       resultDisclaimer:
@@ -368,7 +368,7 @@ export const ko: LocaleResource = {
       },
       primePerspective: 'Prime Perspective',
       multiPersonaMap: '멀티페르소나 맵',
-      priperRegistered: 'PRIPER 분석 후 페르소나가 등록됩니다',
+      priperRegistered: 'V-File 분석 후 페르소나가 등록됩니다',
       patternAnalysis: '누적 패턴 분석',
       totalInput: '총 {count}회 입력',
       ventConversation: 'Vent 대화',
@@ -380,7 +380,7 @@ export const ko: LocaleResource = {
       timesExplored: '{count}회 탐색',
       recentKeywords: '최근 Set 키워드',
       signalAccumulated: '총 {count}개 신호 누적 — 사용할수록 분석이 정교해져요',
-      priperReanalysis: 'PRIPER 재분석',
+      priperReanalysis: 'V-File 재분석',
       maskLabels: {
         NRC: '나르시시스트',
         MKV: '마키아벨리',

@@ -8,7 +8,7 @@ export function StepReady({ onStart }: StepReadyProps) {
   return (
     <div className="bg-card border rounded-2xl p-6 space-y-5">
       <div className="space-y-2">
-        <p className="text-xs text-muted-foreground uppercase tracking-widest">PRIPER Why 분석</p>
+        <p className="text-xs text-muted-foreground uppercase tracking-widest">V-File Why 분석</p>
         <h3 className="text-xl font-bold">나의 Why를 찾는 여정</h3>
         <p className="text-sm text-muted-foreground leading-relaxed">
           행복과 고통의 패턴, 그 뿌리를 10단계로 탐색합니다.

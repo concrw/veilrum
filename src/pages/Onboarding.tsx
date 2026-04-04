@@ -30,15 +30,15 @@ const Onboarding = () => {
   const canonical = useMemo(() => (typeof window !== "undefined" ? window.location.origin + "/onboarding" : "/onboarding"), []);
 
   const onSubmit = (values: FormValues) => {
-    toast({ title: "환영합니다, PRIPER", description: `${values.name}님 온보딩이 저장되었습니다.` });
+    toast({ title: "환영합니다, V-File", description: `${values.name}님 온보딩이 저장되었습니다.` });
     navigate("/");
   };
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
       <Helmet>
-        <title>PRIPER 온보딩 — Prime Perspective 시작</title>
-        <meta name="description" content="PRIPER 온보딩: 프로필 입력과 서비스 목적 선택으로 Prime Perspective 여정을 시작하세요." />
+        <title>V-File 온보딩 — Prime Perspective 시작</title>
+        <meta name="description" content="V-File 온보딩: 프로필 입력과 서비스 목적 선택으로 Prime Perspective 여정을 시작하세요." />
         <link rel="canonical" href={canonical} />
       </Helmet>
 

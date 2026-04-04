@@ -82,7 +82,7 @@ export default function CoreQuestions() {
     }
     safeRemoveItem(CQ_STORAGE_KEY);
     await setOnboardingStep('priper');
-    navigate('/onboarding/priper/start');
+    navigate('/onboarding/vfile/start');
   };
 
   return (

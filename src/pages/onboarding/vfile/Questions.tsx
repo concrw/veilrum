@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { VFILE_QUESTIONS } from '@/data/vfileQuestions';
+import { VFILE_CONTEXT_LABELS } from '@/lib/vfileAlgorithm';
+import type { VFileContext } from '@/lib/vfileAlgorithm';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 
@@ -8,12 +10,16 @@ const STORAGE_KEY = 'veilrum:priper-progress';
 
 export default function PriperQuestions() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const context = ((location.state as any)?.context as VFileContext) ?? 'general';
+  const storageKey = context === 'general' ? STORAGE_KEY : `${STORAGE_KEY}-${context}`;
+
   const [current, setCurrent] = useState(0);
   const [responses, setResponses] = useState<Record<string, number>>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
-        const { responses: r, current: c } = JSON.parse(saved);
+        const { responses: r } = JSON.parse(saved);
         return r ?? {};
       }
     } catch (e) { console.warn("localStorage parse failed:", e); }
@@ -24,7 +30,7 @@ export default function PriperQuestions() {
   // 저장된 위치 복원
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         const { current: c } = JSON.parse(saved);
         if (c) setCurrent(c);
@@ -36,8 +42,10 @@ export default function PriperQuestions() {
   const progress = Math.round(((current) / VFILE_QUESTIONS.length) * 100);
   const isAnswered = responses[q.id] !== undefined;
 
+  const contextLabel = VFILE_CONTEXT_LABELS[context];
+
   const saveProgress = (newResponses: Record<string, number>, idx: number) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ responses: newResponses, current: idx }));
+    localStorage.setItem(storageKey, JSON.stringify({ responses: newResponses, current: idx }));
   };
 
   const handleAnswer = (score: number) => {
@@ -51,8 +59,8 @@ export default function PriperQuestions() {
       saveProgress(newR, next);
     } else {
       // 완료
-      localStorage.removeItem(STORAGE_KEY);
-      navigate('/onboarding/priper/result', { state: { responses: newR } });
+      localStorage.removeItem(storageKey);
+      navigate('/onboarding/vfile/result', { state: { responses: newR, context } });
     }
   };
 
@@ -69,6 +77,15 @@ export default function PriperQuestions() {
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 py-8">
       <div className="max-w-sm w-full mx-auto flex-1 flex flex-col">
+        {/* 맥락 배지 (general 이외일 때만 표시) */}
+        {context !== 'general' && (
+          <div className="mb-3">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-500 font-medium">
+              {contextLabel.icon} {contextLabel.ko}
+            </span>
+          </div>
+        )}
+
         {/* 진행바 */}
         <div className="mb-6">
           <div className="flex justify-between text-xs text-muted-foreground mb-2">

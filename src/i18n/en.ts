@@ -63,7 +63,7 @@ export const en: LocaleResource = {
       card2Title: 'Discover it in 40 questions',
       card2Desc: 'About 8 minutes — the more honest, the more accurate',
       card3Title: '4 modules open, tailored to you',
-      card3Desc: 'PRIPER · CODETALK · DIVE · Community',
+      card3Desc: 'V-File · CODETALK · DIVE · Community',
       startButton: 'Get started',
       disclaimer: 'VEILRUM is a self-exploration tool and does not replace professional counseling or therapy.',
     },
@@ -79,7 +79,7 @@ export const en: LocaleResource = {
       startAnalysis: 'Start analysis',
     },
     priper: {
-      startTitle: 'Finding your Prime Mask',
+      startTitle: 'Finding your V-File',
       startDesc: 'Discover the pattern closest to you among 12 relationship masks',
       info1: '40 questions · about 8 min',
       info2: 'Honest answers lead to accurate results',
@@ -87,8 +87,8 @@ export const en: LocaleResource = {
       info4: 'You can resume after stopping',
       startButton: 'Start analysis',
       disclaimer:
-        'PRIPER is a self-exploration tool and does not replace professional counseling or medical diagnosis. Use results as exploratory reference. If you are experiencing mental health difficulties, we recommend consulting a professional.',
-      resultYourMask: 'Your Prime Mask',
+        'V-File is a self-exploration tool and does not replace professional counseling or medical diagnosis. Use results as exploratory reference. If you are experiencing mental health difficulties, we recommend consulting a professional.',
+      resultYourMask: 'Your V-File',
       resultComplexType: 'Complex type',
       resultEnterButton: 'Start exploring my relationship language →',
       resultDisclaimer:
@@ -368,7 +368,7 @@ export const en: LocaleResource = {
       },
       primePerspective: 'Prime Perspective',
       multiPersonaMap: 'Multi-Persona Map',
-      priperRegistered: 'Personas will be registered after PRIPER analysis',
+      priperRegistered: 'Personas will be registered after V-File analysis',
       patternAnalysis: 'Cumulative Pattern Analysis',
       totalInput: '{count} total inputs',
       ventConversation: 'Vent conversations',
@@ -380,7 +380,7 @@ export const en: LocaleResource = {
       timesExplored: 'Explored {count} times',
       recentKeywords: 'Recent Set keywords',
       signalAccumulated: '{count} signals accumulated — analysis improves with use',
-      priperReanalysis: 'PRIPER Re-analysis',
+      priperReanalysis: 'V-File Re-analysis',
       maskLabels: {
         NRC: 'Narcissist',
         MKV: 'Machiavelli',
