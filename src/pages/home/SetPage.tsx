@@ -12,8 +12,13 @@ import { saveSetSignal } from '@/hooks/useSignalPipeline';
 import CodetalkTab from '@/components/set/CodetalkTab';
 import BoundaryTab, { ALL_AX_MERCER_KEYS, AX_MERCER_SECTIONS, type BoundaryCategory } from '@/components/set/BoundaryTab';
 import AxMercerTab from '@/components/set/AxMercerTab';
+import MiniToolsCard from '@/components/set/MiniToolsCard';
+import ConcernRouter from '@/components/set/ConcernRouter';
+import PersonaBranding from '@/components/set/PersonaBranding';
+import RelationshipSimulation from '@/components/set/RelationshipSimulation';
+import RelationshipCoaching from '@/components/set/RelationshipCoaching';
 
-type Tab = 'codetalk' | 'boundary' | 'feed';
+type Tab = 'codetalk' | 'boundary' | 'feed' | 'tools' | 'practice';
 
 const CONSENT_CONDITIONS = [
   { key: 'no_cross_boundary', label: '상대의 동의 없이 나의 경계를 넘지 않겠다' },
@@ -319,7 +324,7 @@ export default function SetPage() {
 
       {/* 탭 */}
       <div className="bg-card border rounded-2xl p-1 flex">
-        {([['codetalk', '키워드'], ['boundary', '경계 설정'], ['feed', '스토리']] as [Tab, string][]).map(([t, label]) => (
+        {([['codetalk', '키워드'], ['boundary', '경계'], ['tools', '도구'], ['practice', '실천'], ['feed', '스토리']] as [Tab, string][]).map(([t, label]) => (
           <button key={t} onClick={() => setTab(t)}
             className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors
               ${tab === t ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
@@ -354,6 +359,17 @@ export default function SetPage() {
           totalAxProgress={totalAxProgress}
           getAxMercerProgress={getAxMercerProgress}
         />
+      ) : tab === 'tools' ? (
+        <div className="space-y-4">
+          <MiniToolsCard />
+          <ConcernRouter />
+          <PersonaBranding />
+        </div>
+      ) : tab === 'practice' ? (
+        <div className="space-y-4">
+          <RelationshipSimulation />
+          <RelationshipCoaching />
+        </div>
       ) : (
         <AxMercerTab
           keyword={keyword}
