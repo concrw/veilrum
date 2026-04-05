@@ -8,20 +8,33 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  errorId: string | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorId: null };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    const errorId = `ERR-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+    return { hasError: true, error, errorId };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[ErrorBoundary]', error, info.componentStack);
+    const errorId = this.state.errorId ?? `ERR-${Date.now()}`;
+    console.error('[ErrorBoundary]', {
+      errorId,
+      timestamp: new Date().toISOString(),
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      componentStack: info.componentStack,
+      platform: 'veilrum',
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+    });
+    // TODO: Sentry 연동 시 이 위치에서 전송
   }
 
   handleReload = () => {
@@ -29,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   handleRetry = () => {
-    this.setState({ hasError: false, error: null });
+    this.setState({ hasError: false, error: null, errorId: null });
   };
 
   render() {
@@ -121,6 +134,19 @@ export class ErrorBoundary extends Component<Props, State> {
               새로고침
             </button>
           </div>
+
+          {this.state.errorId && (
+            <p
+              style={{
+                marginTop: '1rem',
+                fontSize: '0.7rem',
+                color: '#57534E',
+                fontFamily: 'monospace',
+              }}
+            >
+              {this.state.errorId}
+            </p>
+          )}
 
           {process.env.NODE_ENV === 'development' && this.state.error && (
             <pre

@@ -10,6 +10,18 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     setupFiles: ['./src/__tests__/setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'json-summary'],
+      include: ['src/lib/**'],
+      exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      thresholds: {
+        lines: 60,
+        functions: 60,
+        branches: 50,
+        statements: 60,
+      },
+    },
   },
   server: {
     host: "::",
