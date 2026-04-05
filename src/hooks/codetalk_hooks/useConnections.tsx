@@ -51,7 +51,7 @@ export const useConnections = () => {
       if (error) throw error;
       
       // UI에 맞게 데이터 변환
-      const transformedData = (data || []).map((conn: any) => ({
+      const transformedData = (data || []).map((conn) => ({
         ...conn,
         // 상대방의 정보를 name으로 설정
         name: conn.requester_id === user.id 

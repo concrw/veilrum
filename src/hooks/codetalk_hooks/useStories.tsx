@@ -68,7 +68,7 @@ export const useStories = (keyword?: string) => {
         
         return transformedStories;
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('스토리 조회 완전 실패:', error);
         return [];
       }
@@ -88,7 +88,7 @@ export const useTodayKeyword = () => {
       try {
         // RPC 함수 대신 직접 DB 쿼리 사용 (보안 및 안정성)
         const today = new Date().toISOString().split('T')[0];
-        
+
         const { data, error } = await supabase
           .from('daily_keywords')
           .select('keyword')
@@ -101,8 +101,8 @@ export const useTodayKeyword = () => {
         }
 
         return data?.[0]?.keyword || "외면";
-        
-      } catch (error: any) {
+
+      } catch (error: unknown) {
         console.error('오늘 키워드 조회 실패:', error);
         return "외면";
       }

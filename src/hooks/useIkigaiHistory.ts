@@ -19,7 +19,7 @@ export interface IkigaiAssessment {
   good_at_elements: string[];
   world_needs_elements: string[];
   paid_for_elements: string[];
-  ikigai_intersections: any;
+  ikigai_intersections: Record<string, unknown>;
   final_ikigai: string | null;
   created_at: string;
 }
@@ -125,7 +125,7 @@ export const useDeleteIkigaiAssessment = () => {
         description: "Ikigai 버전이 삭제되었습니다.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Delete ikigai assessment error:", error);
       toast({
         title: "삭제 실패",
@@ -231,7 +231,7 @@ export const useSaveIkigaiDesignVersion = () => {
         description: "새로운 Ikigai 버전이 저장되었습니다.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Save ikigai design version error:", error);
       toast({
         title: "저장 실패",
@@ -268,7 +268,7 @@ export const useDeleteIkigaiDesign = () => {
         description: "Ikigai 버전이 삭제되었습니다.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Delete ikigai design error:", error);
       toast({
         title: "삭제 실패",

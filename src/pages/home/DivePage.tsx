@@ -24,6 +24,15 @@ interface MatchResult {
   score: number;
 }
 
+interface DomainQuestionRow {
+  id: string;
+  question: string | null;
+  keywords: string[] | null;
+  category: string | null;
+  m43_domain_answers: { answer: string | null; m43_researchers: { name: string; specialty: string | null } | null }[] | null;
+  m43_domains: { name: string; code: string } | null;
+}
+
 export default function DivePage() {
   const { user, axisScores } = useAuth();
   const [mode, setMode] = useState<Mode>(axisScores && axisScores.B >= 60 ? 'F' : 'T');
@@ -50,7 +59,7 @@ export default function DivePage() {
       if (!questions) return [];
 
       // 스코어 계산
-      const scored = questions.map((q: any) => {
+      const scored = (questions as DomainQuestionRow[]).map((q) => {
         const qText = (q.question ?? '').toLowerCase();
         const kws = (q.keywords ?? []).map((k: string) => k.toLowerCase());
 
@@ -67,8 +76,8 @@ export default function DivePage() {
         const score = kwNorm * 0.6 + textNorm * 0.4;
 
         return { q, score };
-      }).filter((x: any) => x.score >= 0.2)
-        .sort((a: any, b: any) => b.score - a.score)
+      }).filter((x) => x.score >= 0.2)
+        .sort((a, b) => b.score - a.score)
         .slice(0, 5);
 
       // 로그 저장
@@ -82,8 +91,8 @@ export default function DivePage() {
         });
       }
 
-      return scored.map(({ q, score }: any) => ({
-        question: q.question,
+      return scored.map(({ q, score }) => ({
+        question: q.question ?? '',
         answer: q.m43_domain_answers?.[0]?.answer ?? '',
         researcher: q.m43_domain_answers?.[0]?.m43_researchers?.name ?? '연구원',
         domain: q.m43_domains?.name ?? '',

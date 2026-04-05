@@ -2,12 +2,21 @@ import { useState, useMemo } from 'react';
 import { C, alpha } from '@/lib/colors';
 import { KEYWORD_MAP, getParticipantCount, getVirtualFeedUpToDay } from '@/lib/virtualCodetalk';
 
+interface FeedEntry {
+  anon_alias?: string;
+  created_at: string;
+  definition?: string;
+  imprinting_moment?: string;
+  root_cause?: string;
+  is_virtual?: boolean;
+}
+
 interface StoryFeedProps {
   keyword: { keyword?: string; day_number?: number } | null | undefined;
   currentDay: number;
   feedOpen: boolean;
-  publicFeed: any[] | undefined;
-  todayEntry: any;
+  publicFeed: FeedEntry[] | undefined;
+  todayEntry: FeedEntry | null | undefined;
   userId: string | undefined;
 }
 
@@ -54,7 +63,7 @@ export function StoryFeed({ keyword, currentDay, feedOpen, publicFeed, todayEntr
                   </p>
                   <span className="text-xs text-muted-foreground">{publicFeed.length}명 참여</span>
                 </div>
-                {publicFeed.map((e: any, i: number) => (
+                {publicFeed.map((e: FeedEntry, i: number) => (
                   <div key={i} className="bg-card border rounded-xl p-4 space-y-2"
                     style={{ borderLeftWidth: 3, borderLeftColor: e.is_virtual ? C.frost : C.amber }}>
                     <div className="flex items-center justify-between">

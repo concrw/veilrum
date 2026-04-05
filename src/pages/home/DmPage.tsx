@@ -6,6 +6,30 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
+interface DmRoom {
+  id: string;
+  user_a_id: string;
+  user_b_id: string;
+  is_active: boolean;
+  consent_a: boolean;
+  consent_b: boolean;
+  created_at: string;
+  [key: string]: unknown;
+}
+
+interface DmMessage {
+  id: string;
+  room_id: string;
+  sender_id: string;
+  content: string;
+  is_read: boolean;
+  is_deleted: boolean;
+  is_flagged?: boolean;
+  flag_reason?: string;
+  created_at: string;
+  [key: string]: unknown;
+}
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
@@ -27,7 +51,7 @@ async function checkMessageSafety(message: string): Promise<{ flagged: boolean; 
 export default function DmPage() {
   const { user, primaryMask } = useAuth();
   const qc = useQueryClient();
-  const [selectedRoom, setSelectedRoom] = useState<any>(null);
+  const [selectedRoom, setSelectedRoom] = useState<DmRoom | null>(null);
   const [newMsg, setNewMsg] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -95,11 +119,11 @@ export default function DmPage() {
   // 읽음 처리
   useEffect(() => {
     if (!selectedRoom || !messages || !user) return;
-    const unread = messages.filter((m: any) => m.sender_id !== user.id && !m.is_read);
+    const unread = messages.filter((m: DmMessage) => m.sender_id !== user.id && !m.is_read);
     if (unread.length === 0) return;
     veilrumDb.from('dm_messages')
       .update({ is_read: true })
-      .in('id', unread.map((m: any) => m.id));
+      .in('id', unread.map((m: DmMessage) => m.id));
   }, [messages, selectedRoom, user]);
 
   // 스크롤 하단
@@ -146,7 +170,7 @@ export default function DmPage() {
     }
   };
 
-  const otherUserId = (room: any) =>
+  const otherUserId = (room: DmRoom) =>
     room.user_a_id === user?.id ? room.user_b_id : room.user_a_id;
 
   /* ── 채팅 뷰 ── */
@@ -165,7 +189,7 @@ export default function DmPage() {
 
         {/* 메시지 목록 */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-          {messages?.map((m: any) => {
+          {messages?.map((m: DmMessage) => {
             const isMe = m.sender_id === user?.id;
             return (
               <div key={m.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
@@ -212,7 +236,7 @@ export default function DmPage() {
       {pendingRooms && pendingRooms.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs font-medium text-muted-foreground">대화 요청</p>
-          {pendingRooms.map((room: any) => (
+          {pendingRooms.map((room: DmRoom) => (
             <div key={room.id} className="bg-card border border-primary/30 rounded-xl p-4 space-y-3">
               <div className="space-y-1">
                 <p className="text-sm font-medium">새 대화 요청</p>
@@ -239,7 +263,7 @@ export default function DmPage() {
 
       {rooms && rooms.length > 0 ? (
         <div className="space-y-2">
-          {rooms.map((room: any) => {
+          {rooms.map((room: DmRoom) => {
             const other = otherUserId(room);
             return (
               <button key={room.id}

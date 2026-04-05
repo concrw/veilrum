@@ -11,7 +11,7 @@ const STORAGE_KEY = 'veilrum:priper-progress';
 export default function PriperQuestions() {
   const navigate = useNavigate();
   const location = useLocation();
-  const context = ((location.state as any)?.context as VFileContext) ?? 'general';
+  const context = ((location.state as Record<string, unknown>)?.context as VFileContext) ?? 'general';
   const storageKey = context === 'general' ? STORAGE_KEY : `${STORAGE_KEY}-${context}`;
 
   const [current, setCurrent] = useState(0);

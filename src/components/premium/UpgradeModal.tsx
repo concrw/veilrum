@@ -119,7 +119,7 @@ export default function UpgradeModal({ open, onClose, trigger }: UpgradeModalPro
         // Stripe.js redirect fallback
         window.location.href = `https://checkout.stripe.com/pay/${data.sessionId}`;
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Checkout error:', err);
       setError('결제 페이지를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
     } finally {

@@ -54,7 +54,7 @@ export const useCohortStories = (cohortId?: string, keywordId?: string) => {
           createdAt: story.created_at,
           isGhost: false,
         })),
-        ...(ghostStories || []).map((story: any) => ({
+        ...(ghostStories || []).map((story) => ({
           id: story.id,
           keyword: story.keyword,
           definition: story.definition,

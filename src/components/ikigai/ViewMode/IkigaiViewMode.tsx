@@ -11,11 +11,11 @@ interface AssessmentRow {
   id: string;
   created_at: string;
   final_ikigai: string | null;
-  love_elements: any;
-  good_at_elements: any;
-  world_needs_elements: any;
-  paid_for_elements: any;
-  ikigai_intersections: any;
+  love_elements: unknown[];
+  good_at_elements: unknown[];
+  world_needs_elements: unknown[];
+  paid_for_elements: unknown[];
+  ikigai_intersections: Record<string, unknown>;
 }
 
 interface IkigaiViewModeProps {
@@ -63,8 +63,8 @@ export const IkigaiViewMode = ({
   const goodAt = Array.isArray(row?.good_at_elements) ? row.good_at_elements : [];
   const needs = Array.isArray(row?.world_needs_elements) ? row.world_needs_elements : [];
   const paid = Array.isArray(row?.paid_for_elements) ? row.paid_for_elements : [];
-  const inter = row?.ikigai_intersections || {};
-  const completeness = inter?.completeness || { love: 0, good_at: 0, world_needs: 0, paid_for: 0 };
+  const inter = (row?.ikigai_intersections || {}) as Record<string, unknown>;
+  const completeness = (inter?.completeness || { love: 0, good_at: 0, world_needs: 0, paid_for: 0 }) as Record<string, number>;
 
   const ikigaiData = {
     love,
@@ -175,11 +175,11 @@ export const IkigaiViewMode = ({
                   <p className="text-xs text-muted-foreground">항목이 없습니다.</p>
                 ) : (
                   <div className="flex flex-wrap gap-1">
-                    {g.list.map((v: any, i: number) => (
-                      <Badge 
-                        key={i} 
-                        variant="secondary" 
-                        className="text-xs hover-scale" 
+                    {g.list.map((v: unknown, i: number) => (
+                      <Badge
+                        key={i}
+                        variant="secondary"
+                        className="text-xs hover-scale"
                         title={String(v)}
                       >
                         {String(v).slice(0, 20)}
@@ -195,10 +195,10 @@ export const IkigaiViewMode = ({
         {/* Intersections */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {[
-            { title: "Passion (LOVE ∩ GOOD AT)", list: inter?.Passion || [] },
-            { title: "Mission (LOVE ∩ WORLD)", list: inter?.Mission || [] },
-            { title: "Profession (GOOD AT ∩ PAID)", list: inter?.Profession || [] },
-            { title: "Vocation (WORLD ∩ PAID)", list: inter?.Vocation || [] }
+            { title: "Passion (LOVE ∩ GOOD AT)", list: (Array.isArray(inter?.Passion) ? inter.Passion : []) as unknown[] },
+            { title: "Mission (LOVE ∩ WORLD)", list: (Array.isArray(inter?.Mission) ? inter.Mission : []) as unknown[] },
+            { title: "Profession (GOOD AT ∩ PAID)", list: (Array.isArray(inter?.Profession) ? inter.Profession : []) as unknown[] },
+            { title: "Vocation (WORLD ∩ PAID)", list: (Array.isArray(inter?.Vocation) ? inter.Vocation : []) as unknown[] }
           ].map((g) => (
             <Card key={g.title} className="bg-card/60">
               <CardHeader><CardTitle className="text-xs">{g.title}</CardTitle></CardHeader>
@@ -207,7 +207,7 @@ export const IkigaiViewMode = ({
                   <p className="text-xs text-muted-foreground">항목이 없습니다.</p>
                 ) : (
                   <div className="flex flex-wrap gap-1">
-                    {g.list.map((v: any, i: number) => (
+                    {g.list.map((v: unknown, i: number) => (
                       <Pill key={i}>{String(v)}</Pill>
                     ))}
                   </div>

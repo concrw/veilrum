@@ -10,6 +10,30 @@ import { getVirtualCodetalkEntries } from '@/lib/virtualCodetalk';
 import { KeywordCard } from '@/components/codetalk/KeywordCard';
 import { StoryFeed } from '@/components/codetalk/StoryFeed';
 
+interface CodetalkEntry {
+  id: string;
+  keyword: string;
+  definition: string | null;
+  imprinting_moment: string | null;
+  root_cause: string | null;
+  created_at: string;
+  entry_date: string;
+  codetalk_keywords?: { keyword: string; day_number: number } | null;
+  [key: string]: unknown;
+}
+
+interface PublicFeedEntry {
+  anon_alias: string;
+  keyword: string;
+  definition: string | null;
+  imprinting_moment?: string | null;
+  root_cause?: string | null;
+  created_at: string;
+  entry_date: string;
+  is_virtual: boolean;
+  [key: string]: unknown;
+}
+
 function isPublicFeedOpen(): boolean {
   return new Date().getHours() >= 6;
 }
@@ -135,7 +159,7 @@ export default function CodetalkPage() {
         anon_alias: v.anon_alias, keyword: v.keyword, definition: v.definition,
         created_at: v.created_at, entry_date: new Date(v.created_at).toISOString().slice(0, 10), is_virtual: true,
       }));
-      const combined = [...(data ?? []).map((d: any) => ({ ...d, is_virtual: false })), ...virtualEntries]
+      const combined = [...(data ?? []).map((d: PublicFeedEntry) => ({ ...d, is_virtual: false })), ...virtualEntries]
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       return combined;
     },
@@ -205,7 +229,7 @@ export default function CodetalkPage() {
       {pastEntries && pastEntries.length > 0 && (
         <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground">지난 기록</p>
-          {pastEntries.map((e: any) => (
+          {pastEntries.map((e: CodetalkEntry) => (
             <div key={e.id} className="bg-card border rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-medium">DAY {e.codetalk_keywords?.day_number} · {e.codetalk_keywords?.keyword ?? e.keyword}</span>

@@ -339,7 +339,15 @@ export function useM43WhyIntegration() {
   const runAIAnalysis = useCallback(async (
     sessionId: string,
     userId: string,
-    jobs: any[],
+    jobs: {
+      job_name: string;
+      definition: string | null;
+      first_memory: string | null;
+      category: string | null;
+      reason: string | null;
+      has_experience: boolean;
+      experience_note: string | null;
+    }[],
   ): Promise<WhyM43Analysis> => {
     try {
       const { data, error } = await supabase.functions.invoke('analyze-why-patterns', {

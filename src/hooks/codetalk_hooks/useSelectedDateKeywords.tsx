@@ -40,7 +40,7 @@ export const useSelectedDateKeywords = (selectedDate: Date, partnerId: string, c
       }
 
       // 키워드별로 그룹화
-      const keywordGroups: { [keyword: string]: any[] } = {};
+      const keywordGroups: { [keyword: string]: NonNullable<typeof stories>[number][] } = {};
       stories?.forEach(story => {
         if (!keywordGroups[story.keyword]) {
           keywordGroups[story.keyword] = [];

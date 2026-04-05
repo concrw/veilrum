@@ -42,7 +42,7 @@ export const useConnectionKeywordHistory = (partnerId: string, currentUserId: st
       }
 
       // 키워드별로 그룹화
-      const keywordGroups: { [key: string]: any[] } = {};
+      const keywordGroups: { [key: string]: NonNullable<typeof stories>[number][] } = {};
       stories?.forEach(story => {
         const storyDate = new Date(story.created_at).toISOString().split('T')[0];
         const dateKey = `${story.keyword}|${storyDate}`; // 하이픈 대신 | 사용

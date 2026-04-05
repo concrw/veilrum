@@ -20,17 +20,17 @@ interface DebugOp {
   time: string;
   op: string;
   ok: boolean;
-  detail?: any;
+  detail?: unknown;
 }
 
 interface DebugSnapshot {
-  session: any | null;
+  session: Record<string, unknown> | null;
   jobs: Job[];
   fetchedAt: string | null;
 }
 
 interface DebugPanelProps {
-  user: any;
+  user: { id?: string; email?: string } | null;
   session: SessionInfo | null;
   jobs: Job[];
   step: number;

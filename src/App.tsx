@@ -10,6 +10,8 @@ import type { OnboardingStep } from "./context/AuthContext";
 import { LanguageProvider } from "./context/LanguageContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { OfflineBanner } from "./components/OfflineBanner";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // ── Auth ─────────────────────────────────────────────────────────
 const Login    = lazy(() => import("./pages/auth/Login"));
@@ -155,6 +157,8 @@ const App = () => (
             </Suspense>
             </ErrorBoundary>
           </BrowserRouter>
+          <Analytics />
+          <SpeedInsights />
         </AuthProvider>
       </TooltipProvider>
       </LanguageProvider>

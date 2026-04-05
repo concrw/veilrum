@@ -7,10 +7,32 @@ export interface DynamicInsight {
   confidence: number;
 }
 
+interface KeywordDataItem {
+  keyword: string;
+  definitions: number;
+  diversity: number;
+}
+
+interface DiversityStats {
+  mostConsensus?: { keyword: string; diversity: number };
+  mostDiverse?: { keyword: string; diversity: number };
+  totalKeywords: number;
+  consensusKeywords: number;
+  balancedKeywords: number;
+  diverseKeywords: number;
+}
+
+interface EmotionDataItem {
+  keyword: string;
+  positive: number;
+  negative: number;
+  neutral: number;
+}
+
 export const useDynamicInsights = (
-  keywordData: any[] | undefined,
-  diversityStats: any,
-  emotionData: any[] | undefined
+  keywordData: KeywordDataItem[] | undefined,
+  diversityStats: DiversityStats | undefined,
+  emotionData: EmotionDataItem[] | undefined
 ) => {
   return useMemo(() => {
     if (!keywordData || keywordData.length === 0) {

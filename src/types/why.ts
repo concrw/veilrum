@@ -7,9 +7,9 @@ export interface WhySession {
   timer_started_at: string | null;
   timer_ended_at: string | null;
   prime_perspective: string | null;
-  happy_patterns: any;
-  pain_patterns: any;
-  value_alignment: any;
+  happy_patterns: Record<string, unknown> | null;
+  pain_patterns: Record<string, unknown> | null;
+  value_alignment: Record<string, unknown> | null;
   completed_at: string | null;
   // M43 integration fields (stored in DB but not in generated types)
   m43_domain_matches?: unknown[];
@@ -39,7 +39,7 @@ export interface AnalysisResult {
     jobs: string[];
     keywords: string[];
   };
-  value_alignment: any;
+  value_alignment: Record<string, unknown> | null;
   prime_perspective?: string;
 }
 

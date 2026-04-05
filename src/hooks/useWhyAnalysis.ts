@@ -240,11 +240,11 @@ export const useAnalyzeWhyPatterns = () => {
         description: "Why 패턴 분석이 완료되었습니다.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Why analysis error:", error);
       toast({
         title: "분석 실패",
-        description: error.message || "Why 패턴 분석 중 오류가 발생했습니다.",
+        description: error instanceof Error ? error.message : "Why 패턴 분석 중 오류가 발생했습니다.",
         variant: "destructive",
       });
     },
@@ -276,7 +276,7 @@ export const useDeleteAnalysis = () => {
         description: "분석 결과가 삭제되었습니다.",
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Delete analysis error:", error);
       toast({
         title: "삭제 실패",

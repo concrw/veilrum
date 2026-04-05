@@ -246,7 +246,7 @@ const Results = () => {
         });
         if (error) throw error;
         setAiPerspective(data?.primePerspective || data?.prime_perspective || null);
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error('AI 분석 실패', e);
         setAiError('AI 분석에 실패했습니다. 잠시 후 다시 시도해주세요.');
         toast({ title: 'AI 분석 실패', description: '잠시 후 다시 시도해주세요.', variant: 'destructive' });

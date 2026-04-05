@@ -25,7 +25,7 @@ export const useErrorHandler = () => {
    * @param shouldLog - 콘솔에 에러를 로깅할지 여부 (기본: true)
    */
   const handleError = (
-    error: any,
+    error: unknown,
     customMessage?: string,
     shouldLog = true
   ) => {

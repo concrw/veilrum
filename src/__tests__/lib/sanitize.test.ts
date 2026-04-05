@@ -41,9 +41,9 @@ describe('sanitizeUserInput', () => {
   });
 
   it('null-like input returns ""', () => {
-    expect(sanitizeUserInput(null as any)).toBe('');
-    expect(sanitizeUserInput(undefined as any)).toBe('');
-    expect(sanitizeUserInput(123 as any)).toBe('');
+    expect(sanitizeUserInput(null as unknown as string)).toBe('');
+    expect(sanitizeUserInput(undefined as unknown as string)).toBe('');
+    expect(sanitizeUserInput(123 as unknown as string)).toBe('');
   });
 
   it('mixed case injection is blocked', () => {
@@ -94,8 +94,8 @@ describe('sanitizeArray', () => {
   });
 
   it('returns empty array for non-array input', () => {
-    expect(sanitizeArray(null as any)).toEqual([]);
-    expect(sanitizeArray(undefined as any)).toEqual([]);
+    expect(sanitizeArray(null as unknown as unknown[])).toEqual([]);
+    expect(sanitizeArray(undefined as unknown as unknown[])).toEqual([]);
   });
 
   it('respects maxLength parameter', () => {

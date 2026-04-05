@@ -1,15 +1,25 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { useLongPress } from '@/hooks/useLongPress';
 import HoldCircle from '@/components/ai/HoldCircle';
 import AILeadOverlay from '@/components/ai/AILeadOverlay';
+import { useAuth } from '@/context/AuthContext';
 
 // 탭별 포인트 컬러 (인계문서 §2 기준)
-const TABS = [
+interface TabDef { to: string; label: string; color: string; badge?: boolean }
+
+const ALL_TABS: TabDef[] = [
   { to: '/home/vent', label: 'Vent', color: '#D4A574' },
   { to: '/home/dig',  label: 'Dig',  color: '#A07850' },
   { to: '/home/get',  label: 'Get',  color: '#8C7060' },
   { to: '/home/set',  label: 'Set',  color: '#C4A355' },
+  { to: '/home/me',   label: 'Me',   color: '#E7C17A' },
+];
+
+// V-File 미완료 시 기본 탭 (Get/Set은 진단 후 의미 있음)
+const BASIC_TABS: TabDef[] = [
+  { to: '/home/vent', label: 'Vent', color: '#D4A574' },
+  { to: '/home/dig',  label: 'Dig',  color: '#A07850' },
   { to: '/home/me',   label: 'Me',   color: '#E7C17A' },
 ];
 
@@ -53,6 +63,18 @@ export default function HomeLayout() {
   const [aiLeadOpen, setAiLeadOpen] = useState(false);
   const [holding, setHolding] = useState(false);
   const location = useLocation();
+  const { priperCompleted, personaContextsCompleted } = useAuth();
+
+  // 67번: 바텀네비 동적 구성 — 사용자 상태에 따라 탭 결정
+  const tabs = useMemo<TabDef[]>(() => {
+    if (!priperCompleted) return BASIC_TABS;
+    // 멀티페르소나 2개 이상이면 Set 탭에 배지 표시
+    const hasMultiPersona = personaContextsCompleted.length >= 2;
+    if (hasMultiPersona) {
+      return ALL_TABS.map(t => t.label === 'Set' ? { ...t, badge: true } : t);
+    }
+    return ALL_TABS;
+  }, [priperCompleted, personaContextsCompleted]);
 
   // 현재 탭 감지
   const currentTab = location.pathname.split('/').pop() ?? '';
@@ -120,11 +142,11 @@ export default function HomeLayout() {
           padding: '9px 10px 16px',
         }}
       >
-        {TABS.map(({ to, label, color }) => (
+        {tabs.map(({ to, label, color, badge }) => (
           <NavLink
             key={to}
             to={to}
-            className="flex flex-col items-center gap-1 cursor-pointer px-3 py-1 rounded-[9px] border-none bg-transparent"
+            className="flex flex-col items-center gap-1 cursor-pointer px-3 py-1 rounded-[9px] border-none bg-transparent relative"
             style={({ isActive }) => ({
               background: isActive ? `${color}0A` : 'transparent',
             })}
@@ -148,6 +170,13 @@ export default function HomeLayout() {
                 >
                   {label}
                 </span>
+                {badge && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 w-[6px] h-[6px] rounded-full"
+                    style={{ background: color }}
+                    aria-label="새 기능 알림"
+                  />
+                )}
               </>
             )}
           </NavLink>

@@ -65,7 +65,7 @@ export const useConnectionMessages = (connectionId: string) => {
     },
     onSuccess: (newMessage) => {
       // 낙관적 업데이트
-      queryClient.setQueryData(['connection-messages', connectionId], (old: any[]) => {
+      queryClient.setQueryData(['connection-messages', connectionId], (old: Record<string, unknown>[]) => {
         if (!old) return [newMessage];
         return [...old, newMessage];
       });
@@ -94,7 +94,7 @@ export const useConnectionMessages = (connectionId: string) => {
           console.log('New message received:', payload);
           // 새 메시지가 현재 사용자가 보낸 것이 아닌 경우에만 즉시 업데이트
           if (payload.new.sender_id !== user.id) {
-            queryClient.setQueryData(['connection-messages', connectionId], (old: any[]) => {
+            queryClient.setQueryData(['connection-messages', connectionId], (old: Record<string, unknown>[]) => {
               if (!old) return [payload.new];
               // 중복 방지
               const exists = old.some(msg => msg.id === payload.new.id);

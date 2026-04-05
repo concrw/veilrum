@@ -96,9 +96,10 @@ export const useSubscription = () => {
         toast({ title: "결제가 완료되었습니다" });
         await checkSubscription(); // Refresh subscription status
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating checkout:', error);
-      toast({ title: error.message || "결제 페이지 생성에 실패했습니다", variant: "destructive" });
+      const message = error instanceof Error ? error.message : "결제 페이지 생성에 실패했습니다";
+      toast({ title: message, variant: "destructive" });
     }
   };
 

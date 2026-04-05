@@ -1,5 +1,10 @@
 interface InsightStatsProps {
-  stats: any;
+  stats: {
+    totalUsers?: number | null;
+    totalStories?: number | null;
+    totalKeywords?: number | null;
+    todayStories?: number | null;
+  } | null;
   isLoading: boolean;
 }
 

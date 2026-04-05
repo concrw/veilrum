@@ -40,7 +40,7 @@ export function useWhyFlowAnalysis(props: UseWhyFlowAnalysisProps) {
     const painJobs = jobs.filter(j => j.category === 'pain');
 
     const extractKeywords = (texts: string[]) => {
-      const all = texts.join(' ').split(/[\s,\.]+/).filter(t => t.length > 1);
+      const all = texts.join(' ').split(/[\s,.]+/).filter(t => t.length > 1);
       const freq: Record<string, number> = {};
       for (const w of all) freq[w] = (freq[w] ?? 0) + 1;
       return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([w]) => w);

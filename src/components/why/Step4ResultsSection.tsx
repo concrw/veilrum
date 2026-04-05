@@ -84,7 +84,7 @@ export const Step4ResultsSection = ({
         title: "분석 완료",
         description: "이제 모든 기능을 사용할 수 있습니다.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating analysis status:', error);
       toast({
         title: "업데이트 실패",

@@ -8,7 +8,14 @@ export interface ReflectionQuestion {
   pattern: string; // 어떤 패턴에서 생성되었는지
 }
 
-export const usePersonalizedReflectionQuestions = (stories: any[]) => {
+interface StoryInput {
+  keyword: string;
+  definition?: string;
+  impression?: string;
+  created_at: string;
+}
+
+export const usePersonalizedReflectionQuestions = (stories: StoryInput[]) => {
   return useMemo(() => {
     if (!stories || stories.length === 0) {
       return [];

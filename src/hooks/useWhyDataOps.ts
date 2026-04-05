@@ -254,7 +254,8 @@ export function useWhyDataOps(
         description: "이제 Ikigai 설계와 커뮤니티 매칭을 사용할 수 있습니다.",
       });
       setStep(4);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      console.error("Classification save error:", e);
       toast({ title: "저장 실패", description: "분류 저장에 실패했습니다.", variant: "destructive" });
     }
   };

@@ -69,7 +69,7 @@ export const useConnectionStories = (connectionId: string) => {
     },
     onSuccess: (newStory) => {
       // 낙관적 업데이트
-      queryClient.setQueryData(['connection-stories', connectionId], (old: any[]) => {
+      queryClient.setQueryData(['connection-stories', connectionId], (old: Record<string, unknown>[]) => {
         if (!old) return [newStory];
         return [newStory, ...old];
       });
@@ -84,7 +84,7 @@ export const useConnectionStories = (connectionId: string) => {
   const updateStory = useMutation({
     mutationFn: async ({ id, ...updates }: { id: string; reactions?: number }) => {
       if (!user?.id) throw new Error('User not authenticated');
-      
+
       const { data, error } = await supabase
         .from('connection_stories')
         .update(updates)
@@ -93,10 +93,10 @@ export const useConnectionStories = (connectionId: string) => {
         .select();
 
       if (error) throw error;
-      
+
       const updatedStoryData = data?.[0];
       if (!updatedStoryData) throw new Error('Failed to update story');
-      
+
       return updatedStoryData;
     },
     onSuccess: () => {
@@ -109,7 +109,7 @@ export const useConnectionStories = (connectionId: string) => {
   });
 
   // 실시간 스토리 구독 추가
-  
+
   useEffect(() => {
     if (!connectionId || !user?.id) return;
 
@@ -127,7 +127,7 @@ export const useConnectionStories = (connectionId: string) => {
           console.log('New story received:', payload);
           // 새 스토리가 현재 사용자가 작성한 것이 아닌 경우에만 즉시 업데이트
           if (payload.new.user_id !== user.id) {
-            queryClient.setQueryData(['connection-stories', connectionId], (old: any[]) => {
+            queryClient.setQueryData(['connection-stories', connectionId], (old: Record<string, unknown>[]) => {
               if (!old) return [payload.new];
               // 중복 방지
               const exists = old.some(story => story.id === payload.new.id);

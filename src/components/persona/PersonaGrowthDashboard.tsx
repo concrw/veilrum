@@ -26,6 +26,23 @@ import {
 } from "lucide-react";
 import { ARCHETYPE_CONFIGS } from "@/integrations/supabase/persona-types";
 
+interface GrowthSummaryRow {
+  persona_id: string;
+  current_strength: number;
+  previous_strength: number;
+  change: number;
+}
+
+interface MilestoneRow {
+  id: string;
+  title: string;
+  description: string | null;
+  is_completed: boolean;
+  completed_at: string | null;
+  target_date: string | null;
+  sort_order: number;
+}
+
 export function PersonaGrowthDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -119,7 +136,7 @@ export function PersonaGrowthDashboard() {
   }
 
   const selectedPersona = personas.find((p) => p.id === selectedPersonaId);
-  const selectedGrowth = growthSummary?.find((g: any) => g.persona_id === selectedPersonaId);
+  const selectedGrowth = growthSummary?.find((g: GrowthSummaryRow) => g.persona_id === selectedPersonaId);
 
   const getTrendIcon = (change: number) => {
     if (change > 2) return <TrendingUp className="w-4 h-4 text-green-500" />;
@@ -156,7 +173,7 @@ export function PersonaGrowthDashboard() {
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {personas.map((persona) => {
-          const growth = growthSummary?.find((g: any) => g.persona_id === persona.id);
+          const growth = growthSummary?.find((g: GrowthSummaryRow) => g.persona_id === persona.id);
           const currentStrength = growth?.current_strength || persona.strength_score || 0;
           const previousStrength = growth?.previous_strength || currentStrength;
           const change = growth?.change || 0;
@@ -261,7 +278,7 @@ export function PersonaGrowthDashboard() {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  milestones.map((milestone: any) => (
+                  milestones.map((milestone: MilestoneRow) => (
                     <div
                       key={milestone.id}
                       className={`p-4 border rounded-lg cursor-pointer transition-all ${

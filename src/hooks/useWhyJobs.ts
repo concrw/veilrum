@@ -190,12 +190,12 @@ export function useWhyJobs(props: UseWhyJobsProps) {
 
   // ── Step 4: 분류 ──
   const toggleHappy = (id: string) => {
-    setHappySet(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+    setHappySet(prev => { const s = new Set(prev); if (s.has(id)) { s.delete(id); } else { s.add(id); } return s; });
     setPainSet(prev => { const s = new Set(prev); s.delete(id); return s; });
   };
 
   const togglePain = (id: string) => {
-    setPainSet(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+    setPainSet(prev => { const s = new Set(prev); if (s.has(id)) { s.delete(id); } else { s.add(id); } return s; });
     setHappySet(prev => { const s = new Set(prev); s.delete(id); return s; });
   };
 

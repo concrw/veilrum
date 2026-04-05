@@ -92,7 +92,7 @@ const Insight = () => {
   }, [keywordDiversityData, showAllKeywords, isMobile]);
 
   // 지난 일주일 키워드 데이터
-  const [weeklyKeywords, setWeeklyKeywords] = useState<any[]>([]);
+  const [weeklyKeywords, setWeeklyKeywords] = useState<Record<string, unknown>[]>([]);
 
   // 지난 일주일 키워드 가져오기
   useEffect(() => {
